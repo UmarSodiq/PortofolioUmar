@@ -68,8 +68,6 @@ export function useSupabaseData() {
           }
         }
           
-        console.log('Supabase Projects:', { projectsData, projectsError });
-          
         if (!projectsError && projectsData) {
           const mappedProjects = projectsData.map(p => ({
             id: p.id,
