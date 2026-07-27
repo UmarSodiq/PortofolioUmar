@@ -1,0 +1,6 @@
+{
+  "name": "Portofolio Umar Sodiq",
+  "description": "Website portofolio profesional untuk Umar Sodiq, menampilkan informasi pendidikan, pengalaman kerja, serta proyek.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
