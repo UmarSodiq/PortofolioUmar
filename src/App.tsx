@@ -101,14 +101,12 @@ export default function App() {
         </Section>
 
 
-        {publications && publications.length > 0 && (
-          <Section id="publikasi" title={t('publicationsTitle')} className="transition-colors duration-300">
-            <p className="text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl text-lg leading-relaxed">
-              {t('publicationsDesc')}
-            </p>
-            <PublicationList publications={publications} />
-          </Section>
-        )}
+        <Section id="publikasi" title={t('publicationsTitle')} className="transition-colors duration-300">
+          <p className="text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl text-lg leading-relaxed">
+            {t('publicationsDesc')}
+          </p>
+          <PublicationList publications={publications} />
+        </Section>
         <Section id="keterampilan" title={t('skillsTitle')} className="transition-colors duration-300">
           <SkillsCertifications certifications={certifications} skillCategories={skillCategories} />
         </Section>
