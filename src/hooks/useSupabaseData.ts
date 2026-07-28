@@ -7,7 +7,7 @@ import { dummyProjects, experiences, organizations, education as staticEducation
 export function useSupabaseData() {
   const { language } = useLanguage();
   
-  const [projects, setProjects] = useState<Project[]>(dummyProjects[language]);
+  const [projects, setProjects] = useState<Project[]>(dummyProjects[language] || []);
   const [workExperiences, setWorkExperiences] = useState<Experience[]>(experiences[language]);
   const [orgExperiences, setOrgExperiences] = useState<Experience[]>(organizations[language]);
   const [education, setEducation] = useState<Education>(staticEducation[language]);
@@ -15,18 +15,19 @@ export function useSupabaseData() {
   const [certifications, setCertifications] = useState<Certification[]>(staticCerts[language]);
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>(staticSkills[language]);
   const [profile, setProfile] = useState<Profile>({ aboutMe: staticAboutMe[language] });
-  const [publications, setPublications] = useState<Publication[]>(dummyPublications[language]);
+  const [publications, setPublications] = useState<Publication[]>(dummyPublications[language] || []);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Set fallback immediately on language change
-    setProjects(dummyProjects[language]);
+    setProjects(dummyProjects[language] || []);
     setWorkExperiences(experiences[language]);
     setOrgExperiences(organizations[language]);
     setEducation(staticEducation[language]);
     setCertifications(staticCerts[language]);
     setSkillCategories(staticSkills[language]);
     setProfile({ aboutMe: staticAboutMe[language] });
+    setPublications(dummyPublications[language] || []);
 
     const fetchData = async () => {
       try {
