@@ -56,7 +56,7 @@ export default function App() {
         <meta property="og:url" content={window.location.href} />
         <meta property="og:title" content={t('seoTitle')} />
         <meta property="og:description" content={t('seoDescription')} />
-        <meta property="og:image" content={window.location.origin + '/assets/.aistudio/REZ04302-1.jpg'} />
+        <meta property="og:image" content="https://portofolio.umarsodiq.workers.dev/assets/REZ04302-1.jpg" />
         <meta property="og:site_name" content="Umar Sodiq Portfolio" />
 
         {/* Twitter */}
@@ -64,7 +64,7 @@ export default function App() {
         <meta name="twitter:url" content={window.location.href} />
         <meta name="twitter:title" content={t('seoTitle')} />
         <meta name="twitter:description" content={t('seoDescription')} />
-        <meta name="twitter:image" content={window.location.origin + '/assets/.aistudio/REZ04302-1.jpg'} />
+        <meta name="twitter:image" content="https://portofolio.umarsodiq.workers.dev/assets/REZ04302-1.jpg" />
 
         <html lang={language} />
       </Helmet>
