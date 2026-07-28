@@ -89,8 +89,14 @@ function PublicationItem({ pub, t }: { pub: Publication, t: any }) {
 
 export function PublicationList({ publications }: { publications: Publication[] }) {
   const { t } = useLanguage();
-  
-  if (!publications || publications.length === 0) return null;
+
+  if (!publications || publications.length === 0) {
+    return (
+      <div className="text-zinc-500 dark:text-zinc-400 italic py-10 text-center border-2 border-dashed border-zinc-200 dark:border-white/10 rounded-[2rem] transition-colors">
+        {t('noPublications')}
+      </div>
+    );
+  }
 
   return (
     <motion.div 
