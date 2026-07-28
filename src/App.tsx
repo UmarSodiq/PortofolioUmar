@@ -56,7 +56,7 @@ export default function App() {
         <meta property="og:url" content={window.location.href} />
         <meta property="og:title" content={t('seoTitle')} />
         <meta property="og:description" content={t('seoDescription')} />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" />
+        <meta property="og:image" content={window.location.origin + '/assets/.aistudio/REZ04302-1.jpg'} />
         <meta property="og:site_name" content="Umar Sodiq Portfolio" />
 
         {/* Twitter */}
@@ -64,7 +64,7 @@ export default function App() {
         <meta name="twitter:url" content={window.location.href} />
         <meta name="twitter:title" content={t('seoTitle')} />
         <meta name="twitter:description" content={t('seoDescription')} />
-        <meta name="twitter:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" />
+        <meta name="twitter:image" content={window.location.origin + '/assets/.aistudio/REZ04302-1.jpg'} />
 
         <html lang={language} />
       </Helmet>
@@ -86,7 +86,7 @@ export default function App() {
         </Section>
 
         <Section id="pengalaman" title={t('experienceTitle')} className="transition-colors duration-300">
-          <div className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2.5rem] border border-black/[0.04] dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300">
+          <div className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2.5rem] border border-black/[0.04] dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colo[...]">
             <ExperienceList title={t('workExperience')} experiences={workExperiences} />
             <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent w-full my-12" />
             <ExperienceList title={t('orgExperience')} experiences={orgExperiences} />
@@ -129,7 +129,7 @@ export default function App() {
                     href={link.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 bg-zinc-100 dark:bg-zinc-900 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                    className="p-2 bg-zinc-100 dark:bg-zinc-900 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:h[...]"
                     aria-label={link.name}
                   >
                     <Icon className="w-5 h-5" />
@@ -148,5 +148,3 @@ export default function App() {
     </div>
   );
 }
-
-
