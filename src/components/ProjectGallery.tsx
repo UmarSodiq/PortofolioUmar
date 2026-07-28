@@ -33,7 +33,7 @@ const itemVariants = {
 };
 
 export function ProjectGallery({ projects }: ProjectGalleryProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (projects.length === 0) {
     return (
@@ -45,6 +45,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
 
   return (
     <motion.div 
+      key={language}
       className="grid gap-10 lg:grid-cols-2"
       variants={containerVariants}
       initial="hidden"

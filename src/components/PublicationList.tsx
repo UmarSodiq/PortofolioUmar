@@ -88,7 +88,7 @@ function PublicationItem({ pub, t }: { pub: Publication, t: any }) {
 }
 
 export function PublicationList({ publications }: { publications: Publication[] }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!publications || publications.length === 0) {
     return (
@@ -100,6 +100,7 @@ export function PublicationList({ publications }: { publications: Publication[] 
 
   return (
     <motion.div 
+      key={language}
       className="grid gap-6 md:grid-cols-2"
       variants={containerVariants}
       initial="hidden"
