@@ -4,6 +4,59 @@ import { useLanguage } from '../context/LanguageContext';
 import { Project, Experience, Education, SocialLink, Certification, SkillCategory, Profile, Publication } from '../types';
 import { dummyProjects, experiences, organizations, education as staticEducation, certifications as staticCerts, skills as staticSkills, aboutMe as staticAboutMe, dummyPublications } from '../data';
 
+const parseDate = (dateStr: string) => {
+  if (!dateStr) return 0;
+  
+  const lowerStr = dateStr.toLowerCase();
+  if (lowerStr.includes('sekarang') || lowerStr.includes('present') || lowerStr.includes('saat ini')) {
+    return new Date().getTime();
+  }
+
+  const months: Record<string, number> = {
+    'januari': 0, 'january': 0, 'jan': 0,
+    'februari': 1, 'february': 1, 'feb': 1,
+    'maret': 2, 'march': 2, 'mar': 2,
+    'april': 3, 'apr': 3,
+    'mei': 4, 'may': 4,
+    'juni': 5, 'june': 5, 'jun': 5,
+    'juli': 6, 'july': 6, 'jul': 6,
+    'agustus': 7, 'august': 7, 'aug': 7,
+    'september': 8, 'sep': 8,
+    'oktober': 9, 'october': 9, 'oct': 9,
+    'november': 10, 'nov': 10,
+    'desember': 11, 'december': 11, 'dec': 11
+  };
+
+  const parts = dateStr.trim().split(/\s+/);
+  let month = 0;
+  let year = 1970;
+
+  for (const part of parts) {
+    if (part.length === 4 && !isNaN(Number(part))) {
+      year = Number(part);
+    } else {
+      const cleanPart = part.replace(/[^a-z]/g, '');
+      if (months[cleanPart] !== undefined) {
+        month = months[cleanPart];
+      }
+    }
+  }
+
+  return new Date(year, month).getTime();
+};
+
+const getSortValue = (period: string) => {
+  if (!period) return 0;
+  const parts = period.split(/-|–/); 
+  const startDateStr = parts[0];
+  const endDateStr = parts.length > 1 ? parts[1] : startDateStr;
+  return parseDate(endDateStr);
+};
+
+const sortExperiences = (experiences: Experience[]) => {
+  return [...experiences].sort((a, b) => getSortValue(b.period) - getSortValue(a.period));
+};
+
 export function useSupabaseData() {
   const { language } = useLanguage();
   
@@ -21,8 +74,8 @@ export function useSupabaseData() {
   useEffect(() => {
     // Set fallback immediately on language change
     setProjects(dummyProjects[language] || []);
-    setWorkExperiences(experiences[language]);
-    setOrgExperiences(organizations[language]);
+    setWorkExperiences(sortExperiences(experiences[language]));
+    setOrgExperiences(sortExperiences(organizations[language]));
     setEducation(staticEducation[language]);
     setCertifications(staticCerts[language]);
     setSkillCategories(staticSkills[language]);
@@ -111,12 +164,12 @@ export function useSupabaseData() {
           const work = expData.filter(e => !isOrg(e.type));
           const org = expData.filter(e => isOrg(e.type));
           if (work.length > 0) {
-            setWorkExperiences(work as any);
+            setWorkExperiences(sortExperiences(work as any));
           } else if (expData.length > 0) {
             setWorkExperiences([]);
           }
           if (org.length > 0) {
-            setOrgExperiences(org as any);
+            setOrgExperiences(sortExperiences(org as any));
           } else if (expData.length > 0) {
             setOrgExperiences([]);
           }
