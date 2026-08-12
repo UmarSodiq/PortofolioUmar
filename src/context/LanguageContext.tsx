@@ -59,6 +59,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       seoTitle: 'Umar. | Analis Data & AI',
       seoDescription: 'Portofolio Umar, S1 Matematika dari UIN Sunan Kalijaga dengan fokus Analisis Data dan AI. Lihat proyek, pengalaman, dan keahlian di bidang data.',
       emailCopied: 'Email disalin ke clipboard!',
+      downloadCV: 'Unduh CV',
     },
     en: {
       navHome: 'Home',
@@ -101,6 +102,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       seoTitle: 'Umar. | Data Analyst & AI',
       seoDescription: 'Portfolio of Umar, Mathematics graduate from UIN Sunan Kalijaga focusing on Data Analysis and AI. View projects, experience, and data skills.',
       emailCopied: 'Email copied to clipboard!',
+      downloadCV: 'Download CV',
     },
   };
 

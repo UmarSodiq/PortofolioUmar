@@ -1,4 +1,4 @@
-import { Mail, Linkedin, MapPin, ChevronDown } from 'lucide-react';
+import { Mail, Linkedin, MapPin, ChevronDown, Download } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useState, useRef } from 'react';
 import { Profile } from '../types';
@@ -149,12 +149,16 @@ export function Hero({ profile }: { profile?: Profile }) {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 w-full">
             <MagneticButton as="a" href="#pengalaman" className="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-base font-medium text-white dark:text-zinc-900 bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all w-full sm:w-auto">
               {t('viewExperience')}
             </MagneticButton>
             <MagneticButton as="a" href="#proyek" className="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-base font-medium text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-zinc-800 shadow-sm transition-all w-full sm:w-auto">
               {t('viewProjects')}
+            </MagneticButton>
+            <MagneticButton as="a" href="/assets/CV_Umar_Sodiq.pdf" target="_blank" download="CV_Umar_Sodiq.pdf" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-base font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 shadow-sm transition-all w-full sm:w-auto">
+              <Download className="w-5 h-5" />
+              {t('downloadCV')}
             </MagneticButton>
           </div>
           </motion.div>
