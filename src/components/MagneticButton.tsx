@@ -9,6 +9,7 @@ interface MagneticButtonProps { key?: React.Key;
   href?: string;
   target?: string;
   rel?: string;
+  download?: string | boolean;
 }
 
 export const MagneticButton = ({ children, className = '', as: Component = 'div', ...props }: MagneticButtonProps) => {
