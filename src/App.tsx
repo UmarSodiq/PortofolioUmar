@@ -21,6 +21,8 @@ import { BackToTop } from './components/BackToTop';
 import { PageLoader } from './components/PageLoader';
 import { DynamicBackground } from './components/DynamicBackground';
 import { useSupabaseData } from './hooks/useSupabaseData';
+import { SkeletonLoader } from './components/SkeletonLoader';
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
   const { t, language } = useLanguage();
@@ -45,6 +47,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans text-zinc-900 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
+      <Toaster position="bottom-right" />
       <PageLoader />
       <DynamicBackground />
       <Helmet>
@@ -80,7 +83,7 @@ export default function App() {
           <Hero profile={profile} />
         </div>
         
-        <React.Suspense fallback={<div className="py-20 flex justify-center"><div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <React.Suspense fallback={<SkeletonLoader />}>
         <Section id="pendidikan" title={t('educationTitle')} className="transition-colors duration-300">
           <EducationCard data={education} />
         </Section>

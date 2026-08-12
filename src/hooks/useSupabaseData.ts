@@ -57,12 +57,14 @@ const sortExperiences = (experiences: Experience[]) => {
   return [...experiences].sort((a, b) => getSortValue(b.period) - getSortValue(a.period));
 };
 
+import toast from 'react-hot-toast';
+
 export function useSupabaseData() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   
   const [projects, setProjects] = useState<Project[]>(dummyProjects[language] || []);
-  const [workExperiences, setWorkExperiences] = useState<Experience[]>(experiences[language]);
-  const [orgExperiences, setOrgExperiences] = useState<Experience[]>(organizations[language]);
+  const [workExperiences, setWorkExperiences] = useState<Experience[]>(sortExperiences(experiences[language]));
+  const [orgExperiences, setOrgExperiences] = useState<Experience[]>(sortExperiences(organizations[language]));
   const [education, setEducation] = useState<Education>(staticEducation[language]);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>(staticCerts[language]);
@@ -86,6 +88,38 @@ export function useSupabaseData() {
       try {
         setLoading(true);
         
+        const cacheKey = `portfolio_data_${language}`;
+        const cachedData = sessionStorage.getItem(cacheKey);
+        
+        if (cachedData) {
+          const parsed = JSON.parse(cachedData);
+          setProfile(parsed.profile);
+          setProjects(parsed.projects);
+          setWorkExperiences(parsed.workExperiences);
+          setOrgExperiences(parsed.orgExperiences);
+          setEducation(parsed.education);
+          setCertifications(parsed.certifications);
+          setSkillCategories(parsed.skillCategories);
+          setPublications(parsed.publications);
+          setSocialLinks(parsed.socialLinks);
+          setLoading(false);
+          return;
+        }
+
+        let finalProfile = { aboutMe: staticAboutMe[language] };
+        let finalProjects = dummyProjects[language] || [];
+        let finalWork = sortExperiences(experiences[language]);
+        let finalOrg = sortExperiences(organizations[language]);
+        let finalEdu = staticEducation[language];
+        let finalCert = staticCerts[language];
+        let finalSkills = staticSkills[language];
+        let finalPubs = dummyPublications[language] || [];
+        let finalSocial: SocialLink[] = [
+            { id: '1', name: 'LinkedIn', url: 'https://linkedin.com/in/umarsodiq', icon: 'linkedin' },
+            { id: '2', name: 'GitHub', url: 'https://github.com/umarsodiq', icon: 'github' },
+            { id: '3', name: 'Email', url: 'mailto:umarsodiq.work@gmail.com', icon: 'mail' },
+            { id: '4', name: 'Instagram', url: 'https://instagram.com/umarsodiq', icon: 'instagram' },
+        ];
 
         // Fetch Profile
         let { data: profileData, error: profileError } = await supabase
@@ -94,14 +128,17 @@ export function useSupabaseData() {
           .eq('lang', language)
           .limit(1);
           
-        if (!profileError && (!profileData || profileData.length === 0)) {
+        if (profileError) throw profileError;
+          
+        if (!profileData || profileData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
           const { data: fallbackProfile } = await supabase.from('profiles').select('*').eq('lang', fallbackLang).limit(1);
           if (fallbackProfile && fallbackProfile.length > 0) profileData = fallbackProfile;
         }
         
-        if (!profileError && profileData && profileData.length > 0) {
-          setProfile({ aboutMe: profileData[0].about_me });
+        if (profileData && profileData.length > 0) {
+          finalProfile = { aboutMe: profileData[0].about_me };
+          setProfile(finalProfile);
         }
 
         // Fetch Projects
@@ -110,19 +147,18 @@ export function useSupabaseData() {
           .select('*')
           .eq('lang', language);
           
-        // Fallback to 'id' if no data found for current language
-        if (!projectsError && (!projectsData || projectsData.length === 0)) {
+        if (projectsError) throw projectsError;
+          
+        if (!projectsData || projectsData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
-          const { data: fallbackData, error: fallbackError } = await supabase
+          const { data: fallbackData } = await supabase
             .from('projects')
             .select('*')
             .eq('lang', fallbackLang);
-          if (!fallbackError && fallbackData && fallbackData.length > 0) {
-            projectsData = fallbackData;
-          }
+          if (fallbackData && fallbackData.length > 0) projectsData = fallbackData;
         }
           
-        if (!projectsError && projectsData) {
+        if (projectsData) {
           const mappedProjects = projectsData.map(p => ({
             id: p.id,
             title: p.title,
@@ -134,44 +170,50 @@ export function useSupabaseData() {
             driveUrl: p.drive_url
           }));
           if (mappedProjects.length > 0) {
-            setProjects(mappedProjects);
+            finalProjects = mappedProjects;
+            setProjects(finalProjects);
           } else {
-            setProjects([]); // Clear dummy data if db is empty
+            finalProjects = [];
+            setProjects(finalProjects);
           }
-        } else {
-          console.error('Projects Error:', projectsError);
         }
 
-        // Fetch Experiences (both work and org, separated by type)
+        // Fetch Experiences
         let { data: expData, error: expError } = await supabase
           .from('experiences')
           .select('*')
           .eq('lang', language);
           
-        if (!expError && (!expData || expData.length === 0)) {
+        if (expError) throw expError;
+          
+        if (!expData || expData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
-          const { data: fallbackExp, error: fallbackExpErr } = await supabase
+          const { data: fallbackExp } = await supabase
             .from('experiences')
             .select('*')
             .eq('lang', fallbackLang);
-          if (!fallbackExpErr && fallbackExp && fallbackExp.length > 0) {
-            expData = fallbackExp;
-          }
+          if (fallbackExp && fallbackExp.length > 0) expData = fallbackExp;
         }
           
-        if (!expError && expData) {
+        if (expData) {
           const isOrg = (t?: string) => t && (t.toLowerCase() === 'organisasi' || t.toLowerCase() === 'organization');
           const work = expData.filter(e => !isOrg(e.type));
           const org = expData.filter(e => isOrg(e.type));
+          
           if (work.length > 0) {
-            setWorkExperiences(sortExperiences(work as any));
+            finalWork = sortExperiences(work as any);
+            setWorkExperiences(finalWork);
           } else if (expData.length > 0) {
-            setWorkExperiences([]);
+            finalWork = [];
+            setWorkExperiences(finalWork);
           }
+          
           if (org.length > 0) {
-            setOrgExperiences(sortExperiences(org as any));
+            finalOrg = sortExperiences(org as any);
+            setOrgExperiences(finalOrg);
           } else if (expData.length > 0) {
-            setOrgExperiences([]);
+            finalOrg = [];
+            setOrgExperiences(finalOrg);
           }
         }
 
@@ -182,22 +224,21 @@ export function useSupabaseData() {
           .eq('lang', language)
           .limit(1);
           
-        if (!eduError && (!eduData || eduData.length === 0)) {
+        if (eduError) throw eduError;
+          
+        if (!eduData || eduData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
-          const { data: fallbackEdu, error: fallbackEduErr } = await supabase
+          const { data: fallbackEdu } = await supabase
             .from('educations')
             .select('*')
             .eq('lang', fallbackLang)
             .limit(1);
-          if (!fallbackEduErr && fallbackEdu && fallbackEdu.length > 0) {
-            eduData = fallbackEdu;
-          }
+          if (fallbackEdu && fallbackEdu.length > 0) eduData = fallbackEdu;
         }
           
-        if (!eduError && eduData && eduData.length > 0) {
-          // Map DB columns to our interface
+        if (eduData && eduData.length > 0) {
           const dbEdu = eduData[0];
-          setEducation({
+          finalEdu = {
             institution: dbEdu.institution,
             degree: dbEdu.degree,
             period: dbEdu.period,
@@ -205,7 +246,8 @@ export function useSupabaseData() {
             thesis: dbEdu.thesis || '',
             relevantCourses: dbEdu.relevant_courses || '',
             achievements: dbEdu.achievements || [],
-          });
+          };
+          setEducation(finalEdu);
         }
 
         // Fetch Certifications
@@ -214,14 +256,17 @@ export function useSupabaseData() {
           .select('*')
           .eq('lang', language);
           
-        if (!certError && (!certData || certData.length === 0)) {
+        if (certError) throw certError;
+          
+        if (!certData || certData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
           const { data: fallbackCert } = await supabase.from('certifications').select('*').eq('lang', fallbackLang);
           if (fallbackCert && fallbackCert.length > 0) certData = fallbackCert;
         }
         
-        if (!certError && certData && certData.length > 0) {
-          setCertifications(certData);
+        if (certData && certData.length > 0) {
+          finalCert = certData;
+          setCertifications(finalCert);
         }
 
         // Fetch Skills
@@ -230,19 +275,21 @@ export function useSupabaseData() {
           .select('*')
           .eq('lang', language);
           
-        if (!skillsError && (!skillsData || skillsData.length === 0)) {
+        if (skillsError) throw skillsError;
+          
+        if (!skillsData || skillsData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
           const { data: fallbackSkills } = await supabase.from('skills').select('*').eq('lang', fallbackLang);
           if (fallbackSkills && fallbackSkills.length > 0) skillsData = fallbackSkills;
         }
         
-        if (!skillsError && skillsData && skillsData.length > 0) {
-          setSkillCategories(skillsData.map((s: any) => ({
+        if (skillsData && skillsData.length > 0) {
+          finalSkills = skillsData.map((s: any) => ({
             title: s.title,
             skills: s.items || []
-          })));
+          }));
+          setSkillCategories(finalSkills);
         }
-
 
         // Fetch Publications
         let { data: pubData, error: pubError } = await supabase
@@ -250,16 +297,20 @@ export function useSupabaseData() {
           .select('*')
           .eq('lang', language);
           
-        if (!pubError && (!pubData || pubData.length === 0)) {
+        if (pubError) throw pubError;
+          
+        if (!pubData || pubData.length === 0) {
           const fallbackLang = language === 'id' ? 'en' : 'id';
           const { data: fallbackPub } = await supabase.from('publications').select('*').eq('lang', fallbackLang);
           if (fallbackPub && fallbackPub.length > 0) pubData = fallbackPub;
         }
         
-        if (!pubError && pubData && pubData.length > 0) {
-          setPublications(pubData);
+        if (pubData && pubData.length > 0) {
+          finalPubs = pubData;
+          setPublications(finalPubs);
         } else {
-          setPublications(dummyPublications[language]);
+          finalPubs = dummyPublications[language];
+          setPublications(finalPubs);
         }
 
         // Fetch Social Links
@@ -267,19 +318,36 @@ export function useSupabaseData() {
           .from('social_links')
           .select('*');
 
-        if (!socialError && socialData && socialData.length > 0) {
-          setSocialLinks(socialData);
+        if (socialError) throw socialError;
+
+        if (socialData && socialData.length > 0) {
+          finalSocial = socialData;
+          setSocialLinks(finalSocial);
         } else {
-          setSocialLinks([
-            { id: '1', name: 'LinkedIn', url: 'https://linkedin.com/in/umarsodiq', icon: 'linkedin' },
-            { id: '2', name: 'GitHub', url: 'https://github.com/umarsodiq', icon: 'github' },
-            { id: '3', name: 'Email', url: 'mailto:umarsodiq.work@gmail.com', icon: 'mail' },
-            { id: '4', name: 'Instagram', url: 'https://instagram.com/umarsodiq', icon: 'instagram' },
-          ]);
+          setSocialLinks(finalSocial);
         }
+        
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          profile: finalProfile,
+          projects: finalProjects,
+          workExperiences: finalWork,
+          orgExperiences: finalOrg,
+          education: finalEdu,
+          certifications: finalCert,
+          skillCategories: finalSkills,
+          publications: finalPubs,
+          socialLinks: finalSocial,
+        }));
 
       } catch (error) {
         console.error('Error fetching data from Supabase:', error);
+        toast.error(language === 'id' ? 'Gagal memuat data terbaru.' : 'Failed to load latest data.', {
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
       } finally {
         setLoading(false);
       }
