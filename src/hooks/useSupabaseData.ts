@@ -27,7 +27,7 @@ const parseDate = (dateStr: string) => {
     'desember': 11, 'december': 11, 'dec': 11
   };
 
-  const parts = dateStr.trim().split(/\s+/);
+  const parts = lowerStr.trim().split(/\s+/);
   let month = 0;
   let year = 1970;
 
