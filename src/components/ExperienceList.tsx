@@ -61,7 +61,7 @@ export function ExperienceList({ experiences, title }: ExperienceListProps) {
                 </div>
                 <div className="md:text-right shrink-0">
                   <span className="inline-block px-4 py-1.5 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-300 text-sm font-semibold rounded-full border border-black/5 dark:border-white/5 transition-colors">
-                    {exp.period}
+                    {exp.start_period} – {exp.end_period}
                   </span>
                 </div>
               </div>

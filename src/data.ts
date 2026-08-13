@@ -42,7 +42,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
       role: 'Staff Seksi Verifikasi dan Akuntansi',
       organization: 'KPPN A1 Magelang',
       type: 'Magang Reguler Kementerian Keuangan Periode I Tahun 2026',
-      period: 'April 2026 – Juli 2026',
+      start_period: 'April 2026',
+      end_period: 'Juli 2026',
       description: [
         'Membantu menyelesaikan 8 translasi Laporan Keuangan BUMD ke Kertas Kerja Excel',
         'Membuat materi presentasi untuk sosialisasi ke Satuan Kerja',
@@ -53,7 +54,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
       role: 'Staff Multimedia',
       organization: 'UPT. PTIPD UIN Sunan Kalijaga Yogyakarta',
       type: 'Magang Paruh Waktu UPT. PTIPD 2025',
-      period: 'Januari 2025 – Desember 2025',
+      start_period: 'Januari 2025',
+      end_period: 'Desember 2025',
       description: [
         'Membuat konten visual yang menarik untuk akun media sosial resmi UPT. PTIPD',
         'Membantu dokumentasi kegiatan yang diselenggarakan oleh UPT. PTIPD',
@@ -63,7 +65,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Asisten Instruktur',
       organization: 'ITTC UIN Sunan Kalijaga Yogyakarta',
-      period: 'Februari 2025 – Maret 2025',
+      start_period: 'Februari 2025',
+      end_period: 'Maret 2025',
       description: [
         'Menyiapkan serta menyusun materi pembelajaran, slide presentasi, dan modul praktik laboratorium',
         'Memberikan dukungan teknis secara one-on-one bagi peserta yang mengalami kendala',
@@ -76,7 +79,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
       role: 'Verification and Accounting Section Staff',
       organization: 'KPPN A1 Magelang',
       type: 'Ministry of Finance Regular Internship Period I 2026',
-      period: 'April 2026 – July 2026',
+      start_period: 'April 2026',
+      end_period: 'July 2026',
       description: [
         'Assisted in completing 8 translations of BUMD Financial Reports to Excel Working Papers',
         'Created presentation materials for socialization to Work Units',
@@ -87,7 +91,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
       role: 'Multimedia Staff',
       organization: 'UPT. PTIPD UIN Sunan Kalijaga Yogyakarta',
       type: 'UPT. PTIPD Part-time Internship 2025',
-      period: 'January 2025 – December 2025',
+      start_period: 'January 2025',
+      end_period: 'December 2025',
       description: [
         'Created engaging visual content for UPT. PTIPD official social media accounts',
         'Assisted with documentation of activities organized by UPT. PTIPD',
@@ -97,7 +102,8 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Instructor Assistant',
       organization: 'ITTC UIN Sunan Kalijaga Yogyakarta',
-      period: 'February 2025 – March 2025',
+      start_period: 'February 2025',
+      end_period: 'March 2025',
       description: [
         'Prepared and compiled learning materials, presentation slides, and laboratory practice modules',
         'Provided one-on-one technical support for participants experiencing difficulties',
@@ -112,7 +118,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Wakil Ketua',
       organization: 'Himpunan Mahasiswa Program Studi Matematika',
-      period: 'Desember 2023 – Desember 2024',
+      start_period: 'Desember 2023',
+      end_period: 'Desember 2024',
       description: [
         'Memimpin koordinasi antar divisi dalam menjalankan 3 program kerja besar',
         'Menjadi penghubung antara mahasiswa dan program studi dalam menyampaikan aspirasi',
@@ -122,7 +129,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Staff Media dan Informasi Kreatif',
       organization: 'Generasi Baru Indonesia (GenBI)',
-      period: 'Juli 2024 – Maret 2025',
+      start_period: 'Juli 2024',
+      end_period: 'Maret 2025',
       description: [
         'Membuat dan merancang konten untuk media sosial GenBI UIN Sunan Kalijaga',
         'Membantu pengelolaan dokumentasi setiap kegiatan yang dilaksanakan',
@@ -132,7 +140,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Staff Media dan Informasi',
       organization: 'HMPS Matematika',
-      period: 'Desember 2022 – Desember 2023',
+      start_period: 'Desember 2022',
+      end_period: 'Desember 2023',
       description: [
         'Mengelola akun media sosial himpunan dari membuat konten hingga menjadwalkan unggahan',
         'Membuat desain poster dan dokumentasi acara untuk kebutuhan publikasi kegiatan himpunan',
@@ -144,7 +153,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Vice Chairman',
       organization: 'Mathematics Study Program Student Association',
-      period: 'December 2023 – December 2024',
+      start_period: 'December 2023',
+      end_period: 'December 2024',
       description: [
         'Led coordination between divisions in carrying out 3 major work programs',
         'Acted as a liaison between students and the study program in conveying aspirations',
@@ -154,7 +164,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Creative Media and Information Staff',
       organization: 'New Generation of Indonesia (GenBI)',
-      period: 'July 2024 – March 2025',
+      start_period: 'July 2024',
+      end_period: 'March 2025',
       description: [
         'Created and designed content for GenBI UIN Sunan Kalijaga social media',
         'Assisted in managing documentation for every activity carried out',
@@ -164,7 +175,8 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Media and Information Staff',
       organization: 'Mathematics HMPS',
-      period: 'December 2022 – December 2023',
+      start_period: 'December 2022',
+      end_period: 'December 2023',
       description: [
         'Managed association social media accounts, from creating content to scheduling posts',
         'Created poster designs and event documentation for association event publication needs',

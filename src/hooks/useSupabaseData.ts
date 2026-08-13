@@ -45,16 +45,13 @@ const parseDate = (dateStr: string) => {
   return new Date(year, month).getTime();
 };
 
-const getSortValue = (period: string) => {
-  if (!period) return 0;
-  const parts = period.split(/-|–/); 
-  const startDateStr = parts[0];
-  const endDateStr = parts.length > 1 ? parts[1] : startDateStr;
-  return parseDate(endDateStr);
+const getSortValue = (end_period: string) => {
+  if (!end_period) return 0;
+  return parseDate(end_period);
 };
 
 const sortExperiences = (experiences: Experience[]) => {
-  return [...experiences].sort((a, b) => getSortValue(b.period) - getSortValue(a.period));
+  return [...experiences].sort((a, b) => getSortValue(b.end_period) - getSortValue(a.end_period));
 };
 
 import toast from 'react-hot-toast';
@@ -197,13 +194,23 @@ export function useSupabaseData() {
           
         if (expData) {
           const isOrg = (t?: string) => t && (t.toLowerCase() === 'organisasi' || t.toLowerCase() === 'organization');
-          const work = expData.filter(e => !isOrg(e.type));
-          const org = expData.filter(e => isOrg(e.type));
+          
+          const mappedExp = expData.map((e: any) => {
+            const periodParts = e.period ? e.period.split(/[-–]/) : [];
+            return {
+              ...e,
+              start_period: e.start_period || e.star_period || (periodParts.length > 0 ? periodParts[0].trim() : ''),
+              end_period: e.end_period || (periodParts.length > 1 ? periodParts[1].trim() : (e.period || ''))
+            };
+          });
+
+          const work = mappedExp.filter((e: any) => !isOrg(e.type));
+          const org = mappedExp.filter((e: any) => isOrg(e.type));
           
           if (work.length > 0) {
             finalWork = sortExperiences(work as any);
             setWorkExperiences(finalWork);
-          } else if (expData.length > 0) {
+          } else if (mappedExp.length > 0) {
             finalWork = [];
             setWorkExperiences(finalWork);
           }
@@ -211,7 +218,7 @@ export function useSupabaseData() {
           if (org.length > 0) {
             finalOrg = sortExperiences(org as any);
             setOrgExperiences(finalOrg);
-          } else if (expData.length > 0) {
+          } else if (mappedExp.length > 0) {
             finalOrg = [];
             setOrgExperiences(finalOrg);
           }

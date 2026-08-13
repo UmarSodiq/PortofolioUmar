@@ -8,7 +8,8 @@ export interface SocialLink {
 export interface Experience {
   role: string;
   organization: string;
-  period: string;
+  start_period: string;
+  end_period: string;
   description: string[];
   type?: string;
 }
