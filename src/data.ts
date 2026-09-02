@@ -1,4 +1,4 @@
-import { Certification, Education, Experience, Project, SkillCategory } from './types';
+import { Certification, Education, Experience, Project, SkillCategory, Publication } from './types';
 
 export const aboutMe = {
   id: `Lulusan S1 Matematika UIN Sunan Kalijaga Yogyakarta dengan konsentrasi di statistika, memiliki kemampuan analisis data dan minat mendalam pada Artificial Intelligence. Senang mempelajari hal baru dan berorientasi pada detail, serta terbiasa bekerja secara adaptif dalam lingkungan yang dinamis dan penuh tantangan. Memiliki keterampilan dalam analisis dan visualisasi data, pengolahan data, desain grafis, serta kerja tim dan organisasi. Saat ini sedang mencari peluang di Program Pemagangan Nasional untuk mengembangkan kompetensi sekaligus memberikan kontribusi nyata.`,
@@ -39,9 +39,17 @@ export const education: Record<'id' | 'en', Education> = {
 export const experiences: Record<'id' | 'en', Experience[]> = {
   id: [
     {
+      role: 'Pengembangan Mata Uang dan Produk Keamanan',
+      organization: 'PERUM PERURI',
+      type: 'Magang',
+      start_period: 'Agustus 2026',
+      end_period: 'Sekarang',
+      description: []
+    },
+    {
       role: 'Staff Seksi Verifikasi dan Akuntansi',
       organization: 'KPPN A1 Magelang',
-      type: 'Magang Reguler Kementerian Keuangan Periode I Tahun 2026',
+      type: 'Magang',
       start_period: 'April 2026',
       end_period: 'Juli 2026',
       description: [
@@ -53,7 +61,7 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Staff Multimedia',
       organization: 'UPT. PTIPD UIN Sunan Kalijaga Yogyakarta',
-      type: 'Magang Paruh Waktu UPT. PTIPD 2025',
+      type: 'Magang Paruh Waktu',
       start_period: 'Januari 2025',
       end_period: 'Desember 2025',
       description: [
@@ -65,6 +73,7 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Asisten Instruktur',
       organization: 'ITTC UIN Sunan Kalijaga Yogyakarta',
+      type: 'Kerja',
       start_period: 'Februari 2025',
       end_period: 'Maret 2025',
       description: [
@@ -76,9 +85,17 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
   ],
   en: [
     {
+      role: 'Currency and Security Product Development',
+      organization: 'PERUM PERURI',
+      type: 'Internship',
+      start_period: 'August 2026',
+      end_period: 'Now',
+      description: []
+    },
+    {
       role: 'Verification and Accounting Section Staff',
       organization: 'KPPN A1 Magelang',
-      type: 'Ministry of Finance Regular Internship Period I 2026',
+      type: 'Internship',
       start_period: 'April 2026',
       end_period: 'July 2026',
       description: [
@@ -90,7 +107,7 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Multimedia Staff',
       organization: 'UPT. PTIPD UIN Sunan Kalijaga Yogyakarta',
-      type: 'UPT. PTIPD Part-time Internship 2025',
+      type: 'Part Time Internship',
       start_period: 'January 2025',
       end_period: 'December 2025',
       description: [
@@ -102,6 +119,7 @@ export const experiences: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Instructor Assistant',
       organization: 'ITTC UIN Sunan Kalijaga Yogyakarta',
+      type: 'Work',
       start_period: 'February 2025',
       end_period: 'March 2025',
       description: [
@@ -118,6 +136,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Wakil Ketua',
       organization: 'Himpunan Mahasiswa Program Studi Matematika',
+      type: 'Organisasi',
       start_period: 'Desember 2023',
       end_period: 'Desember 2024',
       description: [
@@ -129,6 +148,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Staff Media dan Informasi Kreatif',
       organization: 'Generasi Baru Indonesia (GenBI)',
+      type: 'Organisasi',
       start_period: 'Juli 2024',
       end_period: 'Maret 2025',
       description: [
@@ -140,6 +160,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Staff Media dan Informasi',
       organization: 'HMPS Matematika',
+      type: 'Organisasi',
       start_period: 'Desember 2022',
       end_period: 'Desember 2023',
       description: [
@@ -153,6 +174,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Vice Chairman',
       organization: 'Mathematics Study Program Student Association',
+      type: 'Organization',
       start_period: 'December 2023',
       end_period: 'December 2024',
       description: [
@@ -164,6 +186,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Creative Media and Information Staff',
       organization: 'New Generation of Indonesia (GenBI)',
+      type: 'Organization',
       start_period: 'July 2024',
       end_period: 'March 2025',
       description: [
@@ -175,6 +198,7 @@ export const organizations: Record<'id' | 'en', Experience[]> = {
     {
       role: 'Media and Information Staff',
       organization: 'Mathematics HMPS',
+      type: 'Organization',
       start_period: 'December 2022',
       end_period: 'December 2023',
       description: [
@@ -256,71 +280,144 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
   id: [
     {
       id: 'proj-1',
-      title: 'Aplikasi Penilaian Laporan',
-      description: 'Sebuah aplikasi yang dikembangkan untuk menilai ketepatan pengiriman laporan pertanggungjawaban bendahara satuan kerja.',
+      title: 'Enterprise Architecture UPT. Pusat Teknologi Informasi dan Pangkalan Data',
+      description: 'Pengembangan dan pemetaan arsitektur enterprise pada UPT. Pusat Teknologi Informasi dan Pangkalan Data. Proyek ini mencakup analisis dan desain domain utama arsitektur (Bisnis, Data, Aplikasi, dan Teknologi) menggunakan kerangka kerja standar untuk mengoptimalkan tata kelola TI dan integrasi sistem layanan digital.',
       images: [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
       ],
-      tags: ['Google Apps Script', 'Data Processing', 'Automation'],
-      repoUrl: 'https://github.com/umarsodiq',
-      demoUrl: 'https://example.com/demo1'
+      tags: ['Enterprise Architecture', 'System Analysis', 'IT Governance'],
+      driveUrl: 'https://drive.google.com/file/d/1FRkIumgmiprhnQwQQDMOJVQa8CtRgiel/view'
     },
     {
       id: 'proj-2',
-      title: 'Analisis Risiko Portofolio Saham (Skripsi)',
-      description: 'Analisis risiko portofolio saham menggunakan Value at Risk (VaR) dengan pendekatan Extreme Value Theory (EVT). Studi kasus pada saham subsektor perbankan periode Mei 2019 hingga Mei 2025.',
+      title: 'Buku Kaleidoskop Bank Indonesia KPw Daerah Istimewa Yogyakarta 2025',
+      description: 'Proyek penyusunan Buku Kaleidoskop untuk Bank Indonesia Kantor Perwakilan (KPw) Daerah Istimewa Yogyakarta. Buku ini merupakan dokumentasi komprehensif yang merangkum jejak langkah, program strategis, kegiatan utama, serta pencapaian Bank Indonesia KPw DIY dalam kurun waktu satu tahun.',
       images: [
-        'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=800'
+        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800'
       ],
-      tags: ['R', 'Data Analysis', 'Finance', 'Statistics'],
-      driveUrl: 'https://drive.google.com'
+      tags: ['Editorial', 'Publication', 'Design', 'Bank Indonesia'],
+      driveUrl: 'https://drive.google.com/file/d/1Ur-qivLyobIPIJZD6FTEQaCz1jA-I2ud/view?usp=sharing&usp=embed_facebook'
+    },
+    {
+      id: 'proj-3',
+      title: 'Aplikasi Dashbord Monitoring dan Penilaian Satker',
+      description: 'Aplikasi Dashboard Monitoring dan Penilaian Satker (Seksi Verifikasi dan Akuntansi KPPN Magelang) adalah sistem manajemen, penilaian, pemantauan, dan pelaporan kepatuhan bagi Satuan Kerja (Satker) di bawah wilayah kerja KPPN Magelang. Aplikasi ini mempermudah proses evaluasi kepatuhan pajak, pengelolaan saldo kas tunai, serta penilaian kinerja bulanan secara otomatis.',
+      images: [
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
+      ],
+      tags: ['React', 'Vite', 'Tailwind CSS', 'Finance', 'Dashboard'],
+      repoUrl: 'https://github.com/UmarSodiq/monitoringpenilaian',
+      demoUrl: 'https://monitoringpenilaian.vercel.app/'
+    },
+    {
+      id: 'proj-4',
+      title: 'Website Portofolio',
+      description: 'Website portofolio pribadi yang dibangun menggunakan React, Vite, Tailwind CSS, dan Firebase dengan bantuan Google AI Studio. Memiliki fitur mode gelap, dukungan multi-bahasa, dan konten dinamis.',
+      images: [
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'
+      ],
+      tags: ['React', 'Vite', 'Tailwind CSS', 'Firebase'],
+      repoUrl: 'https://github.com/UmarSodiq/PortofolioUmar',
+      demoUrl: 'https://portofolio.umarsodiq.workers.dev/'
     }
   ],
   en: [
     {
       id: 'proj-1',
-      title: 'Report Assessment Application',
-      description: 'An application developed to assess the timeliness of the submission of accountability reports by work unit treasurers.',
+      title: 'Enterprise Architecture of the Center for Information Technology and Database (UPT PTIPD)',
+      description: 'Enterprise architecture development and mapping for the Center for Information Technology and Database (UPT PTIPD). This project covers the analysis and design of key architectural domains (Business, Data, Application, and Technology) to optimize IT governance and digital service integration.',
       images: [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
       ],
-      tags: ['Google Apps Script', 'Data Processing', 'Automation'],
-      repoUrl: 'https://github.com/umarsodiq',
-      demoUrl: 'https://example.com/demo1'
+      tags: ['Enterprise Architecture', 'System Analysis', 'IT Governance'],
+      driveUrl: 'https://drive.google.com/file/d/1FRkIumgmiprhnQwQQDMOJVQa8CtRgiel/view'
     },
     {
       id: 'proj-2',
-      title: 'Stock Portfolio Risk Analysis (Thesis)',
-      description: 'Stock portfolio risk analysis using Value at Risk (VaR) with Extreme Value Theory (EVT) approach. Case study on banking subsector stocks from May 2019 to May 2025.',
+      title: '2025 Kaleidoscope Book of Bank Indonesia Special Region of Yogyakarta',
+      description: 'The compilation project of the Kaleidoscope Book for the Bank Indonesia Representative Office of the Special Region of Yogyakarta. This book serves as comprehensive documentation summarizing the milestones, strategic programs, key activities, and achievements of Bank Indonesia Special Region of Yogyakarta within a one-year period.',
       images: [
-        'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=800'
+        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800'
       ],
-      tags: ['R', 'Data Analysis', 'Finance', 'Statistics'],
-      driveUrl: 'https://drive.google.com'
+      tags: ['Editorial', 'Publication', 'Design', 'Bank Indonesia'],
+      driveUrl: 'https://drive.google.com/file/d/1Ur-qivLyobIPIJZD6FTEQaCz1jA-I2ud/view?usp=sharing&usp=embed_facebook'
+    },
+    {
+      id: 'proj-3',
+      title: 'Work Unit Monitoring and Assessment Dashboard Application',
+      description: 'The Work Unit Monitoring and Assessment Dashboard Application (Verification and Accounting Section of KPPN Magelang) is a management, assessment, monitoring, and compliance reporting system for Work Units (Satker) under the KPPN Magelang working area. This application streamlines the evaluation of tax compliance, cash balance management, and automated monthly performance assessments.',
+      images: [
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
+      ],
+      tags: ['React', 'Vite', 'Tailwind CSS', 'Finance', 'Dashboard'],
+      repoUrl: 'https://github.com/UmarSodiq/monitoringpenilaian',
+      demoUrl: 'https://monitoringpenilaian.vercel.app/'
+    },
+    {
+      id: 'proj-4',
+      title: 'Portfolio Website',
+      description: 'Personal portfolio website built with React, Vite, Tailwind CSS, and Firebase, developed with the assistance of Google AI Studio. Features dark mode, multi-language support, and dynamic content.',
+      images: [
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'
+      ],
+      tags: ['React', 'Vite', 'Tailwind CSS', 'Firebase'],
+      repoUrl: 'https://github.com/UmarSodiq/PortofolioUmar',
+      demoUrl: 'https://portofolio.umarsodiq.workers.dev/'
     }
   ]
 };
 
-export const dummyPublications = {
+export const dummyPublications: Record<'id' | 'en', Publication[]> = {
   id: [
     {
       id: '1',
-      title: 'Contoh Publikasi',
-      publisher: 'Publisher Name',
+      title: 'Value at Risk Berbasis Extreme Value Theory untuk Estimasi Risiko Portofolio Saham: Studi Komparatif Model GEV dan GPD pada Saham Perbankan Indonesia',
+      publisher: 'FORSTAT International Conference',
       year: '2026',
-      description: 'Ini adalah contoh deskripsi publikasi. Tambahkan data publikasi Anda melalui Admin Panel agar tersimpan di database.',
+      url: 'https://proceeding.unram.ac.id/index.php/ficon/article/view/3695',
+      description: 'Penelitian ini menganalisis risiko portofolio saham dan mengestimasi potensi kerugian pada saham subsektor perbankan Indonesia menggunakan pendekatan Value at Risk (VaR) yang diintegrasikan dengan Extreme Value Theory (EVT). Studi ini membandingkan metode Block Maxima (GEV) dan Peak Over Threshold (GPD), dengan kesimpulan bahwa model VaR-GPD lebih valid dan akurat untuk mengestimasi risiko pasar pada kondisi ekstrem.'
+    },
+    {
+      id: '2',
+      title: 'Batik Parang Harmoni Epidemi: Mathematical Modeling of Dengue Hemorrhagic Fever Transmission Incorporating Social Awareness (Analysis and Simulation)',
+      publisher: 'Proceeding International Conference on Religion, Science and Education',
+      year: '2026',
+      url: 'https://sunankalijaga.org/prosiding/index.php/icrse/article/view/1895',
+      description: 'Penelitian ini memodelkan penularan Demam Berdarah Dengue (DBD) untuk melihat dampak kesadaran sosial terhadap risiko epidemi. Hasil analisis dan simulasi menunjukkan bahwa peningkatan kesadaran masyarakat secara efektif menekan penyebaran DBD, sementara penurunan kesadaran akan memicu lonjakan infeksi dan kondisi endemik. Temuan ilmiah ini kemudian diwujudkan dalam karya seni Batik Parang Harmoni Epidemi, yang menyimbolkan pentingnya kolaborasi antara sains, perilaku sosial, dan budaya dalam mewujudkan pengendalian DBD yang berkelanjutan.'
+    },
+    {
+      id: '3',
+      title: 'Analisis Risiko Portofolio Saham Menggunakan Value at Risk (VaR) dengan Pendekatan Extreme Value Theory',
+      publisher: 'Umar Sodiq di Posit Connect Cloud',
+      year: '2026',
+      url: 'https://umarsodiq-value-at-risk-evt.share.connect.posit.cloud/',
+      description: 'Dashboard interaktif dan analisis risiko portofolio saham berbasis Posit Connect Cloud.'
     }
   ],
   en: [
     {
       id: '1',
-      title: 'Stock Portfolio Risk Analysis Using Value at Risk with Extreme Value Theory Approach',
-      publisher: '2nd Forstat International Conference',
+      title: 'Extreme Value Theory-Based Value at Risk for Stock Portfolio Risk Estimation: A Comparative Study of GEV and GPD Models in Indonesian Banking Stocks',
+      publisher: 'FORSTAT International Conference',
       year: '2026',
-      url: 'https://example.com/publication-en',
-      description: 'This is an example publication description. Add your publication data through the Admin Panel to display it here.',
+      url: 'https://proceeding.unram.ac.id/index.php/ficon/article/view/3695',
+      description: 'This study analyzes stock portfolio risk and estimates potential losses in Indonesian banking stocks using Value at Risk (VaR) integrated with Extreme Value Theory (EVT). It compares the Block Maxima (GEV) and Peak Over Threshold (GPD) methods, concluding that the VaR-GPD model is the most valid and accurate approach for estimating market risk under extreme conditions.'
+    },
+    {
+      id: '2',
+      title: 'Batik Parang Harmoni Epidemi: Mathematical Modeling of Dengue Hemorrhagic Fever Transmission Incorporating Social Awareness (Analysis and Simulation)',
+      publisher: 'Proceeding International Conference on Religion, Science and Education',
+      year: '2026',
+      url: 'https://sunankalijaga.org/prosiding/index.php/icrse/article/view/1895',
+      description: 'This study models Dengue Hemorrhagic Fever (DHF) transmission to examine the impact of social awareness on epidemic risks. Analysis and simulations show that increased public awareness effectively reduces DHF spread, while declining awareness triggers infection surges and endemic conditions. These scientific findings are artistically visualized in the Batik Parang Harmoni Epidemi artwork, symbolizing the importance of integrating science, social behavior, and culture for sustainable DHF control.'
+    },
+    {
+      id: '3',
+      title: 'Analysis of Stock Portfolio Risk Using Value at Risk (VaR) and the Extreme Value Theory Approach',
+      publisher: 'Umar Sodiq on Posit Connect Cloud',
+      year: '2026',
+      url: 'https://umarsodiq-value-at-risk-evt.share.connect.posit.cloud/',
+      description: 'Interactive dashboard and stock portfolio risk analysis powered by Posit Connect Cloud.'
     }
   ]
 };
