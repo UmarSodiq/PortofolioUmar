@@ -310,16 +310,17 @@ export const dummyPublications = {
       title: 'Contoh Publikasi',
       publisher: 'Publisher Name',
       year: '2026',
-      description: 'Ini adalah contoh deskripsi publikasi. Tambahkan data publikasi Anda ke Supabase agar tampil di sini.',
+      description: 'Ini adalah contoh deskripsi publikasi. Tambahkan data publikasi Anda melalui Admin Panel agar tersimpan di database.',
     }
   ],
   en: [
     {
       id: '1',
-      title: 'Example Publication',
-      publisher: 'Publisher Name',
+      title: 'Stock Portfolio Risk Analysis Using Value at Risk with Extreme Value Theory Approach',
+      publisher: '2nd Forstat International Conference',
       year: '2026',
-      description: 'This is an example publication description. Add your publication data to Supabase to show it here.',
+      url: 'https://example.com/publication-en',
+      description: 'This is an example publication description. Add your publication data through the Admin Panel to display it here.',
     }
   ]
 };

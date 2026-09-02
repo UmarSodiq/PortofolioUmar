@@ -22,7 +22,7 @@ const itemVariants = {
   },
 };
 
-function PublicationItem({ pub, t }: { pub: Publication, t: any }) {
+function PublicationItem({ pub, t }: { pub: Publication; t: any; key?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (

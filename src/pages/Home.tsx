@@ -15,7 +15,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { BackToTop } from '../components/BackToTop';
 import { PageLoader } from '../components/PageLoader';
 import { DynamicBackground } from '../components/DynamicBackground';
-import { useSupabaseData } from '../hooks/useSupabaseData';
+import { useFirebaseData } from '../hooks/useFirebaseData';
 import { SkeletonLoader } from '../components/SkeletonLoader';
 import { DataDashboard } from '../components/DataDashboard';
 
@@ -28,7 +28,7 @@ export default function Home() {
     restDelta: 0.001
   });
 
-  const { projects, workExperiences, orgExperiences, education, certifications, skillCategories, socialLinks, profile, publications } = useSupabaseData();
+  const { projects, workExperiences, orgExperiences, education, certifications, skillCategories, socialLinks, profile, publications } = useFirebaseData();
 
   const getIcon = (iconName: string): LucideIcon => {
     switch (iconName.toLowerCase()) {
