@@ -51,13 +51,13 @@ export default function Home() {
         <meta property="og:url" content={window.location.href} />
         <meta property="og:title" content={t('seoTitle')} />
         <meta property="og:description" content={t('seoDescription')} />
-        <meta property="og:image" content="https://portofolio.umarsodiq.workers.dev/assets/REZ04302-1.jpg" />
+        <meta property="og:image" content="https://portofolio.umarsodiq.workers.dev/og-image.jpg" />
         <meta property="og:site_name" content="Umar Sodiq Portfolio" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content={window.location.href} />
         <meta name="twitter:title" content={t('seoTitle')} />
         <meta name="twitter:description" content={t('seoDescription')} />
-        <meta name="twitter:image" content="https://portofolio.umarsodiq.workers.dev/assets/REZ04302-1.jpg" />
+        <meta name="twitter:image" content="https://portofolio.umarsodiq.workers.dev/og-image.jpg" />
         <html lang={language} />
       </Helmet>
       
