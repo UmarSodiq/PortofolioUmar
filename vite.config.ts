@@ -19,7 +19,7 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ['react', 'react-dom', 'motion', 'lucide-react', '@supabase/supabase-js'],
+            vendor: ['react', 'react-dom', 'motion', 'lucide-react', 'firebase/app', 'firebase/firestore', 'firebase/auth'],
           },
         },
       },
