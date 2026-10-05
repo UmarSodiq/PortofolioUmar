@@ -95,7 +95,7 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
                 required
                 value={formData.lang || 'id'}
                 onChange={(e) => handleChange('lang', e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value="id">Indonesian (id)</option>
                 <option value="en">English (en)</option>
@@ -114,7 +114,7 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
                     required={field.required}
                     value={formData[field.key] || ''}
                     onChange={(e) => handleChange(field.key, e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ) : (
                   <div>
@@ -123,7 +123,7 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
                       rows={field.type === 'array' ? 3 : 4}
                       value={formData[field.key] || ''}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 resize-y"
+                      className="w-full p-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-white outline-none focus:ring-2 focus:ring-red-500 resize-y"
                     />
                     {field.type === 'array' && (
                       <p className="text-xs text-zinc-500 mt-1">
@@ -150,7 +150,7 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
             form="admin-form"
             type="submit"
             disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-colors font-medium flex items-center gap-2 disabled:opacity-70"
+            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-colors font-medium flex items-center gap-2 disabled:opacity-70"
           >
             {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Changes'}
           </button>

@@ -64,7 +64,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
             {/* Header with Close Button */}
             <div className="flex items-center justify-between p-6 pb-4 border-b border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-900/50">
               <div className="flex items-center gap-2">
-                <span className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <span className="p-2 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400">
                   <Sparkles className="w-5 h-5" />
                 </span>
                 <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
@@ -81,7 +81,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
             </div>
 
             {/* Modal Body */}
-            <div className="overflow-y-auto p-6 sm:p-8 space-y-6 flex-1">
+            <div data-lenis-prevent className="overflow-y-auto p-6 sm:p-8 space-y-6 flex-1">
               {/* Main Image Showcase */}
               {project.images && project.images.length > 0 ? (
                 <div className="space-y-3">
@@ -102,7 +102,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                           onClick={() => setSelectedImageIndex(idx)}
                           className={`relative rounded-xl overflow-hidden w-20 h-14 shrink-0 border-2 transition-all cursor-pointer ${
                             selectedImageIndex === idx
-                              ? 'border-emerald-500 scale-105 shadow-md'
+                              ? 'border-red-500 scale-105 shadow-md'
                               : 'border-transparent opacity-60 hover:opacity-100'
                           }`}
                         >
@@ -114,7 +114,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                 </div>
               ) : (
                 <div className="w-full h-48 rounded-2xl bg-zinc-100 dark:bg-zinc-800/40 border border-zinc-200 dark:border-white/5 flex flex-col items-center justify-center text-zinc-400">
-                  <Code className="w-12 h-12 mb-2 opacity-40 text-emerald-500" />
+                  <Code className="w-12 h-12 mb-2 opacity-40 text-red-500" />
                   <span className="text-sm font-medium">{t('noPreview')}</span>
                 </div>
               )}
@@ -129,7 +129,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                   {project.tags && project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 rounded-lg border border-emerald-200/50 dark:border-emerald-500/20"
+                      className="px-3 py-1 text-xs font-semibold bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300 rounded-lg border border-red-200/50 dark:border-red-500/20"
                     >
                       {tag}
                     </span>
@@ -152,7 +152,7 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                     href={project.demoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-colors shadow-md cursor-pointer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors shadow-md cursor-pointer"
                   >
                     <ExternalLink className="w-4 h-4" />
                     <span>{t('demo')}</span>

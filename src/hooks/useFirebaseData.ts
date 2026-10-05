@@ -13,7 +13,6 @@ import {
   aboutMe as staticAboutMe, 
   dummyPublications 
 } from '../data';
-import toast from 'react-hot-toast';
 
 const parseDate = (dateStr: string) => {
   if (!dateStr) return 0;
@@ -99,7 +98,7 @@ export function useFirebaseData() {
       try {
         setLoading(true);
         
-        const cacheKey = `portfolio_data_${language}`;
+        const cacheKey = `portfolio_data_v4_${language}`;
         const cachedData = sessionStorage.getItem(cacheKey);
         
         if (cachedData) {
@@ -168,16 +167,26 @@ export function useFirebaseData() {
         }
 
         if (projectsDocs.length > 0) {
-          const mappedProjects = projectsDocs.map(p => ({
-            id: p.id,
-            title: p.title || '',
-            description: p.description || '',
-            images: p.images || [],
-            tags: p.tags || [],
-            repoUrl: p.repo_url || p.repoUrl,
-            demoUrl: p.demo_url || p.demoUrl,
-            driveUrl: p.drive_url || p.driveUrl
-          }));
+          const currentDummy = dummyProjects[language] || dummyProjects.id;
+          const mappedProjects = projectsDocs.map(p => {
+            const localMatch = currentDummy.find(dp => 
+              dp.title.toLowerCase().trim() === (p.title || '').toLowerCase().trim() ||
+              dp.id === p.id
+            );
+            const shouldUseLocalThumbnail = localMatch?.images?.length && 
+              (!p.images?.length || p.images[0].includes('unsplash.com'));
+
+            return {
+              id: p.id,
+              title: p.title || '',
+              description: p.description || '',
+              images: shouldUseLocalThumbnail ? localMatch.images : (p.images || []),
+              tags: p.tags || [],
+              repoUrl: p.repo_url || p.repoUrl,
+              demoUrl: p.demo_url || p.demoUrl,
+              driveUrl: p.drive_url || p.driveUrl
+            };
+          });
           finalProjects = mappedProjects;
           setProjects(finalProjects);
         }
@@ -331,7 +340,3 @@ export function useFirebaseData() {
 
   return { projects, workExperiences, orgExperiences, education, certifications, skillCategories, socialLinks, profile, publications, loading };
 }
-
-// Alias for backwards compatibility
-export const useSupabaseData = useFirebaseData;
-export const usePortfolioData = useFirebaseData;

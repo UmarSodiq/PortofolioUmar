@@ -1,25 +1,11 @@
-import { Award, CheckCircle2, Zap, Brain, Wrench, Languages, Star } from 'lucide-react';
+import { Award, CheckCircle2, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Certification, SkillCategory } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { SpotlightCard } from './SpotlightCard';
 
 export function SkillsCertifications({ certifications, skillCategories }: { certifications: Certification[], skillCategories: SkillCategory[] }) {
-  const { t, language } = useLanguage();
-  
-  const skillIcons = [
-    <Brain className="w-5 h-5 text-purple-500" />,
-    <Zap className="w-5 h-5 text-amber-500" />,
-    <Wrench className="w-5 h-5 text-blue-500" />,
-    <Languages className="w-5 h-5 text-emerald-500" />
-  ];
-
-  const bentoSpans = [
-    "md:col-span-2", // 0: Softskills
-    "md:col-span-1", // 1: Teknis
-    "md:col-span-2", // 2: Software
-    "md:col-span-1", // 3: Bahasa
-  ];
+  const { t } = useLanguage();
 
   return (
     <div className="grid lg:grid-cols-2 gap-16 lg:gap-20">
@@ -44,7 +30,7 @@ export function SkillsCertifications({ certifications, skillCategories }: { cert
               transition={{ duration: 0.4, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
               <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <CheckCircle2 className="w-4 h-4 text-red-500" />
                 {category.title}
               </h4>
               <div className="flex flex-wrap gap-2.5">
@@ -84,12 +70,12 @@ export function SkillsCertifications({ certifications, skillCategories }: { cert
             >
               <SpotlightCard className="flex items-start gap-5 p-5 hover:border-white/60 dark:hover:border-white/20 hover:-translate-y-1 transition-all duration-300 group">
                 <div className="shrink-0 mt-0.5">
-                  <div className="w-12 h-12 rounded-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/20 group-hover:border-emerald-200 dark:group-hover:border-emerald-800/30 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-red-600 dark:group-hover:text-red-400 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-200 dark:group-hover:border-red-800/30 transition-colors">
                     <Award className="w-6 h-6" />
                   </div>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100 leading-tight mb-2 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                  <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100 leading-tight mb-2 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                     {cert.name}
                   </h4>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium transition-colors">

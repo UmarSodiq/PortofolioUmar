@@ -270,7 +270,7 @@ export default function Admin() {
       <div className="w-64 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-white/5 h-screen sticky top-0 flex flex-col overflow-y-auto">
         <div className="p-6">
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <LayoutDashboard className="w-5 h-5 text-emerald-500" />
+            <LayoutDashboard className="w-5 h-5 text-red-500" />
             Admin Panel
           </h2>
           <p className="text-xs text-zinc-500 mt-1 truncate">{user.email}</p>
@@ -284,7 +284,7 @@ export default function Admin() {
               <button 
                 key={table}
                 onClick={() => setActiveTab(table)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors cursor-pointer ${isActive ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400'}`}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors cursor-pointer ${isActive ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-medium' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400'}`}
               >
                 <Icon className="w-5 h-5" />
                 {tableConfigs[table].title}
@@ -298,7 +298,7 @@ export default function Admin() {
           <button
             onClick={handleSeedData}
             disabled={isSeeding}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
           >
             {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             Seed Default Data

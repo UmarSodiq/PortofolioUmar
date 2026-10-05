@@ -283,7 +283,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: 'Enterprise Architecture UPT. Pusat Teknologi Informasi dan Pangkalan Data',
       description: 'Pengembangan dan pemetaan arsitektur enterprise pada UPT. Pusat Teknologi Informasi dan Pangkalan Data. Proyek ini mencakup analisis dan desain domain utama arsitektur (Bisnis, Data, Aplikasi, dan Teknologi) menggunakan kerangka kerja standar untuk mengoptimalkan tata kelola TI dan integrasi sistem layanan digital.',
       images: [
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
+        '/projects/enterprise-architecture.jpg'
       ],
       tags: ['Enterprise Architecture', 'System Analysis', 'IT Governance'],
       driveUrl: 'https://drive.google.com/file/d/1FRkIumgmiprhnQwQQDMOJVQa8CtRgiel/view'
@@ -293,7 +293,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: 'Buku Kaleidoskop Bank Indonesia KPw Daerah Istimewa Yogyakarta 2025',
       description: 'Proyek penyusunan Buku Kaleidoskop untuk Bank Indonesia Kantor Perwakilan (KPw) Daerah Istimewa Yogyakarta. Buku ini merupakan dokumentasi komprehensif yang merangkum jejak langkah, program strategis, kegiatan utama, serta pencapaian Bank Indonesia KPw DIY dalam kurun waktu satu tahun.',
       images: [
-        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800'
+        '/projects/kaleidoskop-bi.jpg'
       ],
       tags: ['Editorial', 'Publication', 'Design', 'Bank Indonesia'],
       driveUrl: 'https://drive.google.com/file/d/1Ur-qivLyobIPIJZD6FTEQaCz1jA-I2ud/view?usp=sharing&usp=embed_facebook'
@@ -303,7 +303,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: 'Aplikasi Dashbord Monitoring dan Penilaian Satker',
       description: 'Aplikasi Dashboard Monitoring dan Penilaian Satker (Seksi Verifikasi dan Akuntansi KPPN Magelang) adalah sistem manajemen, penilaian, pemantauan, dan pelaporan kepatuhan bagi Satuan Kerja (Satker) di bawah wilayah kerja KPPN Magelang. Aplikasi ini mempermudah proses evaluasi kepatuhan pajak, pengelolaan saldo kas tunai, serta penilaian kinerja bulanan secara otomatis.',
       images: [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
+        '/projects/kppn-monitoring.png'
       ],
       tags: ['React', 'Vite', 'Tailwind CSS', 'Finance', 'Dashboard'],
       repoUrl: 'https://github.com/UmarSodiq/monitoringpenilaian',
@@ -327,7 +327,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: 'Enterprise Architecture of the Center for Information Technology and Database (UPT PTIPD)',
       description: 'Enterprise architecture development and mapping for the Center for Information Technology and Database (UPT PTIPD). This project covers the analysis and design of key architectural domains (Business, Data, Application, and Technology) to optimize IT governance and digital service integration.',
       images: [
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
+        '/projects/enterprise-architecture.jpg'
       ],
       tags: ['Enterprise Architecture', 'System Analysis', 'IT Governance'],
       driveUrl: 'https://drive.google.com/file/d/1FRkIumgmiprhnQwQQDMOJVQa8CtRgiel/view'
@@ -337,7 +337,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: '2025 Kaleidoscope Book of Bank Indonesia Special Region of Yogyakarta',
       description: 'The compilation project of the Kaleidoscope Book for the Bank Indonesia Representative Office of the Special Region of Yogyakarta. This book serves as comprehensive documentation summarizing the milestones, strategic programs, key activities, and achievements of Bank Indonesia Special Region of Yogyakarta within a one-year period.',
       images: [
-        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800'
+        '/projects/kaleidoskop-bi.jpg'
       ],
       tags: ['Editorial', 'Publication', 'Design', 'Bank Indonesia'],
       driveUrl: 'https://drive.google.com/file/d/1Ur-qivLyobIPIJZD6FTEQaCz1jA-I2ud/view?usp=sharing&usp=embed_facebook'
@@ -347,7 +347,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       title: 'Work Unit Monitoring and Assessment Dashboard Application',
       description: 'The Work Unit Monitoring and Assessment Dashboard Application (Verification and Accounting Section of KPPN Magelang) is a management, assessment, monitoring, and compliance reporting system for Work Units (Satker) under the KPPN Magelang working area. This application streamlines the evaluation of tax compliance, cash balance management, and automated monthly performance assessments.',
       images: [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
+        '/projects/kppn-monitoring.png'
       ],
       tags: ['React', 'Vite', 'Tailwind CSS', 'Finance', 'Dashboard'],
       repoUrl: 'https://github.com/UmarSodiq/monitoringpenilaian',

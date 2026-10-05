@@ -49,10 +49,10 @@ export function ExperienceList({ experiences, title }: ExperienceListProps) {
             variants={itemVariants}
             className="group"
           >
-            <SpotlightCard className="p-5 sm:p-8 transition-all duration-300 rounded-[2rem] hover:border-zinc-300 dark:hover:border-white/20 hover:shadow-xl dark:hover:shadow-2xl/10">
+            <SpotlightCard className="p-5 sm:p-8 transition-all duration-300 rounded-[2rem] hover:border-zinc-300 dark:hover:border-white/20 hover:shadow-xl dark:hover:shadow-2xl/10 relative">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-5">
                 <div>
-                  <h4 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h4 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                     {exp.role}
                   </h4>
                   <p className="text-zinc-600 dark:text-zinc-400 font-medium mt-1">
@@ -66,10 +66,10 @@ export function ExperienceList({ experiences, title }: ExperienceListProps) {
                 </div>
               </div>
               
-              <ul className="space-y-3 mt-4 pl-5 border-l-2 border-zinc-100 dark:border-zinc-800 group-hover:border-emerald-200 dark:group-hover:border-emerald-800 transition-colors duration-500">
+              <ul className="space-y-3 mt-4 pl-5 border-l-2 border-zinc-100 dark:border-zinc-800 group-hover:border-red-200 dark:group-hover:border-red-800 transition-colors duration-500">
                 {exp.description.map((desc, i) => (
                   <li key={i} className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed relative">
-                    <span className="absolute -left-[27px] top-2 w-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-700 group-hover:bg-emerald-400 dark:group-hover:bg-emerald-500 transition-colors duration-500 ring-4 ring-[#FAFAFA] dark:ring-zinc-950 group-hover:ring-white dark:group-hover:ring-zinc-900"></span>
+                    <span className="absolute -left-[27px] top-2 w-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-700 group-hover:bg-red-400 dark:group-hover:bg-red-500 transition-colors duration-500 ring-4 ring-[#FAFAFA] dark:ring-zinc-950 group-hover:ring-white dark:group-hover:ring-zinc-900"></span>
                     {desc}
                   </li>
                 ))}

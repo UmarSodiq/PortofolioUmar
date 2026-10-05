@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { scrollToTarget } from '../lib/smoothScroll';
 
 export function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,10 +20,7 @@ export function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTarget(0);
   };
 
   return (
@@ -34,7 +32,7 @@ export function BackToTop() {
           exit={{ opacity: 0, y: 20, scale: 0.8 }}
           transition={{ duration: 0.2 }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 p-3.5 bg-zinc-900 text-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:bg-zinc-800 transition-all z-50 focus:outline-none hover:-translate-y-1"
+          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 p-3.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border border-zinc-200 dark:border-white/10 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all z-50 focus:outline-none hover:-translate-y-1 cursor-pointer"
           aria-label="Back to top"
         >
           <ArrowUp className="w-5 h-5" />

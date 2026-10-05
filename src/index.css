@@ -15,6 +15,38 @@
   .animate-marquee {
     animation: marquee 30s linear infinite;
   }
+
+  @keyframes textShine {
+    0% {
+      background-position: 120% center;
+    }
+    100% {
+      background-position: -120% center;
+    }
+  }
+
+  .shimmer-title {
+    background: linear-gradient(110deg, #18181b 30%, #dc2626 46%, #f87171 50%, #dc2626 54%, #18181b 70%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: textShine 4.5s ease-in-out infinite;
+  }
+
+  .dark .shimmer-title {
+    background: linear-gradient(110deg, #ffffff 30%, #ef4444 46%, #fca5a5 50%, #ef4444 54%, #ffffff 70%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .shimmer-title:hover {
+    animation-duration: 2s;
+  }
 }
 
 /* Custom Scrollbar */
@@ -46,11 +78,27 @@
 }
 
 body {
-  @apply antialiased text-zinc-900 bg-white selection:bg-emerald-500/30;
+  @apply antialiased text-zinc-900 bg-white selection:bg-red-500/30;
 }
 
 .dark body {
-  @apply text-zinc-50 bg-zinc-950 selection:bg-emerald-400/30;
+  @apply text-zinc-50 bg-zinc-950 selection:bg-red-500/30;
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 

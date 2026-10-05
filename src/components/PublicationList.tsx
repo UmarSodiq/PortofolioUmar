@@ -30,14 +30,14 @@ function PublicationItem({ pub, t }: { pub: Publication; t: any; key?: string })
       <SpotlightCard className="h-full p-6 sm:p-8 hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl/10 rounded-[2rem] flex flex-col">
         <div className="flex-grow flex flex-col">
           <div className="mb-4">
-            <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/20 transition-colors mb-5">
+            <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400 group-hover:text-red-600 dark:group-hover:text-red-400 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 transition-colors mb-5">
               <BookOpen className="w-6 h-6" />
             </div>
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
               className="text-left w-full focus:outline-none flex justify-between items-start gap-4 group/btn"
             >
-              <h4 className="text-xl font-bold text-zinc-900 dark:text-white group-hover/btn:text-emerald-600 dark:group-hover/btn:text-emerald-400 transition-colors mb-2">
+              <h4 className="text-xl font-bold text-zinc-900 dark:text-white group-hover/btn:text-red-600 dark:group-hover/btn:text-red-400 transition-colors mb-2">
                 {pub.title}
               </h4>
               {pub.description && (
@@ -76,7 +76,7 @@ function PublicationItem({ pub, t }: { pub: Publication; t: any; key?: string })
               href={pub.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-white hover:text-red-600 dark:hover:text-red-400 transition-colors"
             >
               {t('viewProject') || 'Lihat'} <ExternalLink className="w-4 h-4" />
             </a>

@@ -22,7 +22,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  hidden: { opacity: 0, y: 40, scale: 0.96 },
   visible: {
     opacity: 1,
     y: 0,
@@ -54,7 +54,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, margin: "-40px" }}
       >
         {projects.map((project) => (
           <motion.div 
@@ -66,21 +66,21 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
               {/* Gallery Image Area - Clickable to open modal */}
               <div 
                 onClick={() => setSelectedProject(project)}
-                className="relative bg-zinc-50 dark:bg-zinc-800/50 overflow-hidden border-b border-black/[0.03] dark:border-white/[0.02] transition-colors cursor-pointer group/img"
+                className="relative h-72 sm:h-80 w-full bg-zinc-100/80 dark:bg-zinc-800/60 overflow-hidden border-b border-black/[0.03] dark:border-white/[0.02] transition-colors cursor-pointer group/img flex items-center justify-center p-3 sm:p-4"
               >
                 {project.images && project.images.length > 0 ? (
-                  <div className="w-full h-full relative overflow-hidden">
+                  <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
                     <img 
                       src={project.images[0]} 
                       alt={`${project.title} screenshot`}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                      className="max-h-full max-w-full object-contain rounded-xl shadow-sm group-hover:scale-105 group-hover:-translate-y-1 group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                     />
                     {/* Hover Overlay with Eye Icon */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 dark:bg-zinc-900/90 text-zinc-900 dark:text-white text-xs font-semibold shadow-lg transform translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
-                        <Eye className="w-4 h-4 text-emerald-500" />
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-xl backdrop-blur-[2px]">
+                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 dark:bg-zinc-900/95 text-zinc-900 dark:text-white text-xs font-semibold shadow-lg transform translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
+                        <Eye className="w-4 h-4 text-red-500" />
                         {language === 'id' ? 'Lihat Detail' : 'View Details'}
                       </span>
                     </div>
@@ -97,7 +97,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
               <div className="p-8 flex flex-col flex-grow">
                 <h3 
                   onClick={() => setSelectedProject(project)}
-                  className="text-2xl font-bold text-zinc-900 dark:text-white mb-3 transition-colors cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400"
+                  className="text-2xl font-bold text-zinc-900 dark:text-white mb-3 transition-colors cursor-pointer hover:text-red-600 dark:hover:text-red-400"
                 >
                   {project.title}
                 </h3>
@@ -117,7 +117,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
                   {/* Detail Trigger */}
                   <button
                     onClick={() => setSelectedProject(project)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-xl transition-colors cursor-pointer mr-auto"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl transition-colors cursor-pointer mr-auto"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>{language === 'id' ? 'Detail' : 'Details'}</span>
@@ -141,7 +141,7 @@ export function ProjectGallery({ projects }: ProjectGalleryProps) {
                       href={project.driveUrl} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-xs font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm"
                     >
                       <ArrowRight className="w-3.5 h-3.5" />
                       <span>{t('drive')}</span>
