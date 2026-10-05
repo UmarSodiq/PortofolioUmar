@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Loader2, UploadCloud, Trash2, Plus, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import { X, Loader2, UploadCloud, Trash2, Plus, Link as LinkIcon, Image as ImageIcon, Info } from 'lucide-react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage, isFirebaseConfigured } from '../lib/firebase';
 import toast from 'react-hot-toast';
@@ -134,7 +134,7 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
         const existing = Array.isArray(prev[fieldKey]) ? prev[fieldKey] : [];
         return { ...prev, [fieldKey]: [...existing, downloadUrl] };
       });
-      toast.success('Thumbnail berhasil diunggah!');
+      toast.success('Thumbnail dipilih! Klik tombol "Save Changes" di bawah untuk menyimpan.', { duration: 5000 });
     } catch (err: any) {
       console.error('Error uploading image:', err);
       toast.error('Gagal mengunggah gambar.');
@@ -257,6 +257,14 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
                         ))}
                       </div>
                     )}
+
+                    {/* Important save notice */}
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 flex items-start gap-2">
+                      <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
+                      <span>
+                        <strong>Catatan:</strong> Setelah memilih gambar, pastikan klik tombol <strong>"Save Changes"</strong> di bawah untuk menyimpan perubahan ke proyek.
+                      </span>
+                    </div>
 
                     {/* Upload File Input / Drop Area */}
                     <div className="flex flex-col gap-2">

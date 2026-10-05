@@ -190,6 +190,8 @@ export default function Admin() {
     if (!confirm('Are you sure you want to delete this item?')) return;
     try {
       await deleteDoc(doc(db, table, id));
+      sessionStorage.removeItem('portfolio_data_v4_id');
+      sessionStorage.removeItem('portfolio_data_v4_en');
       toast.success('Item deleted');
       fetchTableData(table);
     } catch (error: any) {
@@ -218,15 +220,18 @@ export default function Admin() {
           ...formData,
           updated_at: serverTimestamp()
         });
-        toast.success('Item updated successfully!');
+        toast.success('Data berhasil disimpan dan diperbarui!');
       } else {
         // Insert new document
         await addDoc(collection(db, activeTab), {
           ...formData,
           created_at: serverTimestamp()
         });
-        toast.success('Item created successfully!');
+        toast.success('Data baru berhasil ditambahkan!');
       }
+      // Invalidate frontend cache so changes appear immediately on the website
+      sessionStorage.removeItem('portfolio_data_v4_id');
+      sessionStorage.removeItem('portfolio_data_v4_en');
       setModalOpen(false);
       fetchTableData(activeTab);
     } catch (err: any) {
@@ -245,6 +250,8 @@ export default function Admin() {
       await seedAllDataToFirestore((msg) => {
         toast.loading(msg, { id: toastId });
       });
+      sessionStorage.removeItem('portfolio_data_v4_id');
+      sessionStorage.removeItem('portfolio_data_v4_en');
       toast.success('Berhasil mengisi seluruh data ke Firestore!', { id: toastId });
       fetchAllData();
     } catch (err: any) {
