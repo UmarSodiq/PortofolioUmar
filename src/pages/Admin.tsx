@@ -61,7 +61,7 @@ const tableConfigs: Record<TableName, { title: string, icon: any, fields: FieldC
       { key: 'title', label: 'Title', type: 'text', required: true },
       { key: 'description', label: 'Description', type: 'textarea', required: true },
       { key: 'tags', label: 'Tags', type: 'array', required: true },
-      { key: 'images', label: 'Images (URLs)', type: 'array', required: false },
+      { key: 'images', label: 'Thumbnail & Tangkapan Layar Proyek', type: 'image-upload', required: false },
       { key: 'repo_url', label: 'Repo URL', type: 'url', required: false },
       { key: 'demo_url', label: 'Demo URL', type: 'url', required: false },
       { key: 'drive_url', label: 'Drive URL', type: 'url', required: false }
@@ -353,8 +353,15 @@ export default function Admin() {
                   
                   return (
                     <tr key={item.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group">
-                      <td className="px-6 py-4 font-medium">
-                        {identifier}
+                      <td className="px-6 py-4 font-medium flex items-center gap-3">
+                        {activeTab === 'projects' && item.images && item.images.length > 0 && (
+                          <img
+                            src={item.images[0]}
+                            alt=""
+                            className="w-10 h-10 rounded-lg object-cover border border-zinc-200 dark:border-white/10 shrink-0 bg-zinc-100 dark:bg-zinc-800"
+                          />
+                        )}
+                        <span>{identifier}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="uppercase text-xs font-bold bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">
