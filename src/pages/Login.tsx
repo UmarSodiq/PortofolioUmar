@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { auth, isFirebaseConfigured } from '../lib/firebase';
 import { Lock, Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -9,7 +9,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,35 +22,6 @@ export default function Login() {
     return () => unsubscribe();
   }, [navigate]);
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast.error('Silakan masukkan email Anda terlebih dahulu.');
-      return;
-    }
-    if (!isFirebaseConfigured) {
-      toast.error('Firebase belum dikonfigurasi di file .env');
-      return;
-    }
-
-    try {
-      setResetLoading(true);
-      await sendPasswordResetEmail(auth, email.trim());
-      toast.success(`Tautan reset password telah dikirim ke ${email}. Silakan periksa inbox/spam!`, { duration: 6000 });
-    } catch (err: any) {
-      console.error('Password Reset Error:', err);
-      let errorMsg = 'Gagal mengirim email reset password.';
-      if (err.code === 'auth/user-not-found') {
-        errorMsg = 'Email tidak terdaftar di sistem.';
-      } else if (err.code === 'auth/invalid-email') {
-        errorMsg = 'Format email tidak valid.';
-      } else if (err.message) {
-        errorMsg = err.message;
-      }
-      toast.error(errorMsg);
-    } finally {
-      setResetLoading(false);
-    }
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,19 +92,9 @@ export default function Login() {
           </div>
           
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Password
-              </label>
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                disabled={resetLoading}
-                className="text-xs text-red-600 dark:text-red-400 hover:underline cursor-pointer disabled:opacity-50"
-              >
-                {resetLoading ? 'Mengirim email...' : 'Lupa password?'}
-              </button>
-            </div>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
               <input
