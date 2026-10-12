@@ -25,33 +25,61 @@ interface AdminFormModalProps {
 
 const compressImage = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
+    // 8-second safety timeout so it never hangs
+    const timer = setTimeout(() => reject(new Error('Proses kompresi gambar timeout')), 8000);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 1200;
-        let w = img.width;
-        let h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) {
-            h = Math.round((h * maxDim) / w);
-            w = maxDim;
-          } else {
-            w = Math.round((w * maxDim) / h);
-            h = maxDim;
+        clearTimeout(timer);
+        try {
+          const canvas = document.createElement('canvas');
+          // Optimized for crisp responsive web showcase (max 960px width/height)
+          const maxDim = 960;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
           }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Gagal menginisialisasi canvas'));
+            return;
+          }
+          // High quality image smoothing
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // WebP at 0.78 quality yields sharp ~35-60KB thumbnails that save directly to Firestore safely
+          let dataUrl = canvas.toDataURL('image/webp', 0.78);
+          if (!dataUrl.startsWith('data:image/webp')) {
+            dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          }
+          resolve(dataUrl);
+        } catch (err) {
+          reject(err);
         }
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/webp', 0.85));
       };
-      img.onerror = reject;
+      img.onerror = () => {
+        clearTimeout(timer);
+        reject(new Error('Format file gambar tidak valid'));
+      };
       img.src = e.target?.result as string;
     };
-    reader.onerror = reject;
+    reader.onerror = () => {
+      clearTimeout(timer);
+      reject(new Error('Gagal membaca file'));
+    };
     reader.readAsDataURL(file);
   });
 };
@@ -59,6 +87,8 @@ const compressImage = (file: File): Promise<string> => {
 export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, fields, isSubmitting }: AdminFormModalProps) {
   const [formData, setFormData] = useState<any>({});
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,6 +120,9 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
         setFormData(defaultData);
       }
       setCustomImageUrl('');
+      setUploadingImage(false);
+      setUploadStatus('');
+      setIsDragging(false);
     }
   }, [isOpen, initialData, fields]);
 
@@ -99,33 +132,49 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
     setFormData((prev: any) => ({ ...prev, [key]: value }));
   };
 
-  const handleImageFile = async (e: React.ChangeEvent<HTMLInputElement>, fieldKey: string) => {
-    const file = e.target.files?.[0];
+  const processImageFile = async (file: File, fieldKey: string) => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error('File harus berupa gambar (PNG, JPG, WEBP, SVG, dll).');
+      toast.error('File harus berupa gambar (PNG, JPG, WEBP, dll).');
+      return;
+    }
+
+    // Guard against massive >20MB accidental files
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error('Ukuran file terlalu besar (maksimal 20MB).');
       return;
     }
 
     try {
       setUploadingImage(true);
+      setUploadStatus('Mengunggah gambar...');
       let downloadUrl = '';
 
-      // Try Firebase Storage first if configured
+      // Try Firebase Storage with a strict 2.5-second timeout (prevents 10-minute retry freeze if storage bucket is not configured)
       if (isFirebaseConfigured && storage) {
         try {
           const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
           const storageRef = ref(storage, `projects/${Date.now()}_${safeName}`);
-          const snapshot = await uploadBytes(storageRef, file);
-          downloadUrl = await getDownloadURL(snapshot.ref);
+          
+          const uploadPromise = (async () => {
+            const snapshot = await uploadBytes(storageRef, file);
+            return await getDownloadURL(snapshot.ref);
+          })();
+
+          const timeoutPromise = new Promise<string>((_, reject) => {
+            setTimeout(() => reject(new Error('Firebase Storage timeout')), 2500);
+          });
+
+          downloadUrl = await Promise.race([uploadPromise, timeoutPromise]);
         } catch (storageErr) {
-          console.warn('Firebase Storage upload failed, fallback to canvas WebP:', storageErr);
+          console.warn('Firebase Storage upload failed or timed out, auto-converting to optimized WebP:', storageErr);
         }
       }
 
-      // If Firebase Storage did not yield a URL (e.g. storage rules or not set up), use compressed WebP
+      // If Firebase Storage did not yield a URL (e.g. storage rules or not set up), use fast compressed WebP
       if (!downloadUrl) {
+        setUploadStatus('Mengompresi ke format WebP...');
         downloadUrl = await compressImage(file);
       }
 
@@ -134,13 +183,22 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
         const existing = Array.isArray(prev[fieldKey]) ? prev[fieldKey] : [];
         return { ...prev, [fieldKey]: [...existing, downloadUrl] };
       });
-      toast.success('Thumbnail dipilih! Klik tombol "Save Changes" di bawah untuk menyimpan.', { duration: 5000 });
+      toast.success('Thumbnail berhasil ditambahkan! Klik "Save Changes" di bawah untuk menyimpan.', { duration: 5000 });
     } catch (err: any) {
-      console.error('Error uploading image:', err);
-      toast.error('Gagal mengunggah gambar.');
+      console.error('Error processing image:', err);
+      toast.error('Gagal memproses gambar: ' + (err.message || 'Error'));
     } finally {
       setUploadingImage(false);
+      setUploadStatus('');
+      setIsDragging(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>, fieldKey: string) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImageFile(file, fieldKey);
     }
   };
 
@@ -278,19 +336,34 @@ export function AdminFormModal({ isOpen, onClose, onSubmit, initialData, title, 
                       />
                       <label
                         htmlFor={`file-upload-${field.key}`}
-                        className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-zinc-300 dark:border-zinc-700 hover:border-red-500 dark:hover:border-red-500 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer ${
-                          uploadingImage ? 'opacity-60 pointer-events-none' : ''
-                        }`}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          setIsDragging(true);
+                        }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setIsDragging(false);
+                          const droppedFile = e.dataTransfer.files?.[0];
+                          if (droppedFile) {
+                            processImageFile(droppedFile, field.key);
+                          }
+                        }}
+                        className={`flex flex-col sm:flex-row items-center justify-center gap-2 px-4 py-3.5 border-2 border-dashed rounded-xl text-sm font-medium transition-all cursor-pointer ${
+                          isDragging
+                            ? 'border-red-500 bg-red-500/10 text-red-600 dark:text-red-400 scale-[1.01]'
+                            : 'border-zinc-300 dark:border-zinc-700 hover:border-red-500 dark:hover:border-red-500 bg-zinc-50 dark:bg-zinc-800/40 text-zinc-700 dark:text-zinc-200 hover:text-red-600 dark:hover:text-red-400'
+                        } ${uploadingImage ? 'opacity-70 pointer-events-none' : ''}`}
                       >
                         {uploadingImage ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin text-red-500" />
-                            <span>Mengunggah thumbnail...</span>
+                            <span>{uploadStatus || 'Memproses thumbnail...'}</span>
                           </>
                         ) : (
                           <>
-                            <UploadCloud className="w-4 h-4 text-red-500" />
-                            <span>Unggah File Gambar (PNG, JPG, WEBP)</span>
+                            <UploadCloud className="w-4 h-4 text-red-500 shrink-0" />
+                            <span>Pilih atau Tarik Gambar ke sini (PNG, JPG, WEBP)</span>
                           </>
                         )}
                       </label>
