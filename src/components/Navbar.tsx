@@ -45,7 +45,8 @@ export function Navbar() {
 
       for (let i = sectionElements.length - 1; i >= 0; i--) {
         const el = sectionElements[i];
-        if (el && el.offsetTop <= scrollPosition) {
+        // Page-absolute top (offsetTop breaks inside GSAP's positioned .pin-spacer)
+        if (el && el.getBoundingClientRect().top + window.scrollY <= scrollPosition) {
           setActiveSection(links[i].id);
           return;
         }

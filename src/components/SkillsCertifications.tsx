@@ -1,8 +1,8 @@
-import { Award, CheckCircle2, Star } from 'lucide-react';
+import { CheckCircle2, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Certification, SkillCategory } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { SpotlightCard } from './SpotlightCard';
+import { DraggableCardDeck } from './DraggableCardDeck';
 
 export function SkillsCertifications({ certifications, skillCategories }: { certifications: Certification[], skillCategories: SkillCategory[] }) {
   const { t } = useLanguage();
@@ -23,7 +23,7 @@ export function SkillsCertifications({ certifications, skillCategories }: { cert
         <div className="space-y-8">
           {skillCategories.map((category, idx) => (
             <motion.div 
-              key={idx}
+              key={idx} 
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -48,46 +48,10 @@ export function SkillsCertifications({ certifications, skillCategories }: { cert
         </div>
       </div>
 
-      {/* Sertifikasi */}
+      {/* Sertifikasi (Draggable Physics Deck / Switchable to List) */}
       <div className="min-w-0">
-        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-black/[0.04] dark:border-white/[0.04]">
-          <div className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-white/5">
-            <Award className="w-5 h-5 text-zinc-700 dark:text-zinc-300" />
-          </div>
-          <h3 className="text-2xl font-display font-bold text-zinc-900 dark:text-white">
-            {t('certTab')}
-          </h3>
-        </div>
-        
-        <div className="space-y-4">
-          {certifications.map((cert, idx) => (
-            <motion.div 
-              key={idx} 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <SpotlightCard className="flex items-start gap-5 p-5 hover:border-white/60 dark:hover:border-white/20 hover:-translate-y-1 transition-all duration-300 group">
-                <div className="shrink-0 mt-0.5">
-                  <div className="w-12 h-12 rounded-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-white/5 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-red-600 dark:group-hover:text-red-400 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 group-hover:border-red-200 dark:group-hover:border-red-800/30 transition-colors">
-                    <Award className="w-6 h-6" />
-                  </div>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100 leading-tight mb-2 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                    {cert.name}
-                  </h4>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium transition-colors">
-                    {cert.issuer} <span className="text-zinc-300 dark:text-zinc-600 mx-1.5">•</span> {cert.year}
-                  </p>
-                </div>
-              </SpotlightCard>
-            </motion.div>
-          ))}
-        </div>
+        <DraggableCardDeck certifications={certifications} />
       </div>
     </div>
   );
 }
-

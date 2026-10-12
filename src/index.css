@@ -47,6 +47,23 @@
   .shimmer-title:hover {
     animation-duration: 2s;
   }
+
+  /* Outlined display numerals (project index) */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(24, 24, 27, 0.12);
+  }
+  .dark .text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+  }
+
+  /* Horizontal carousels without a visible scrollbar */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Custom Scrollbar */

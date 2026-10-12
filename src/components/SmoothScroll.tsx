@@ -39,7 +39,25 @@ export function SmoothScroll() {
     };
     document.addEventListener('click', onClick);
 
+    // Content loads async (Firebase, lazy sections, images) and shifts layout,
+    // so re-measure ScrollTrigger pins whenever the page height really changes.
+    let lastHeight = document.body.scrollHeight;
+    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+    const resizeObserver = new ResizeObserver(() => {
+      const h = document.body.scrollHeight;
+      if (Math.abs(h - lastHeight) < 2) return;
+      lastHeight = h;
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        lastHeight = document.body.scrollHeight;
+      }, 200);
+    });
+    resizeObserver.observe(document.body);
+
     return () => {
+      resizeObserver.disconnect();
+      clearTimeout(refreshTimer);
       document.removeEventListener('click', onClick);
       gsap.ticker.remove(tick);
       lenis.destroy();

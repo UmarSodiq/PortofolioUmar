@@ -7,6 +7,7 @@ import { MagneticButton } from './MagneticButton';
 import { RevealText } from './RevealText';
 import { HeroName } from './HeroName';
 import { EASE_OUT_EXPO, INTRO_DELAY } from '../lib/smoothScroll';
+import HeroContourWaves from './HeroContourWaves';
 
 const D = INTRO_DELAY;
 
@@ -63,22 +64,11 @@ export function Hero({ profile }: { profile?: Profile }) {
       id="beranda"
       className="min-h-screen flex flex-col justify-center relative pt-24 sm:pt-28 bg-[#FAFAFA] dark:bg-zinc-950 transition-colors duration-300 overflow-hidden"
     >
-      {/* Grid pattern that fades out toward the edges */}
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: D }}
-        className="absolute inset-0 pointer-events-none text-zinc-900/[0.05] dark:text-white/[0.05] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',
-          backgroundSize: '64px 64px',
-        }}
-      />
-
       {/* Mouse-following spotlight */}
       <motion.div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: spotlight }} />
+
+      {/* Topographic / Fourier Waveform Contour Lines — 100% free of dots/particles */}
+      <HeroContourWaves progress={scrollYProgress} />
 
       {/* Animated gradient blobs (scroll + mouse parallax) */}
       <motion.div style={{ y: backgroundY }} className="absolute inset-0 overflow-hidden pointer-events-none">

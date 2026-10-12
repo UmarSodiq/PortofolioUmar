@@ -17,6 +17,7 @@ import { PageLoader } from '../components/PageLoader';
 import { DynamicBackground } from '../components/DynamicBackground';
 import { useFirebaseData } from '../hooks/useFirebaseData';
 import { SkeletonLoader } from '../components/SkeletonLoader';
+import { CustomCursor } from '../components/CustomCursor';
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -31,6 +32,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen font-sans text-zinc-900 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
+      <CustomCursor />
       <SmoothScroll />
       <PageLoader />
       <DynamicBackground />
@@ -58,39 +60,90 @@ export default function Home() {
       <Navbar />
       
       <main>
-        <div id="beranda">
-          <Hero profile={profile} />
-        </div>
+        <Hero profile={profile} />
         
         <React.Suspense fallback={<SkeletonLoader />}>
 
-        <Section id="pendidikan" title={t('educationTitle')} className="transition-colors duration-300">
+        <Section 
+          id="pendidikan" 
+          title={t('educationTitle')} 
+          containerClassName="max-w-5xl" 
+          className="transition-colors duration-300"
+        >
           <EducationCard data={education} />
         </Section>
 
-        <Section id="pengalaman" title={t('experienceTitle')} className="transition-colors duration-300">
-          <div className="bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2.5rem] border border-black/[0.04] dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300 relative overflow-hidden">
-            <ExperienceList title={t('workExperience')} experiences={workExperiences} />
-            <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent w-full my-12" />
-            <ExperienceList title={t('orgExperience')} experiences={orgExperiences} />
+        {/* Split & Sticky Layout for Experience */}
+        <Section 
+          id="pengalaman" 
+          title={t('experienceTitle')} 
+          containerClassName="max-w-6xl" 
+          className="transition-colors duration-300"
+        >
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Sticky Sidebar Info (Left Column) */}
+            <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-6">
+              <div className="p-6 sm:p-8 rounded-[2rem] bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-black/[0.04] dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-none">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-semibold mb-4 border border-red-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  {language === 'id' ? 'Karier & Kepemimpinan' : 'Career & Leadership'}
+                </span>
+                <h3 className="text-xl font-bold font-display text-zinc-900 dark:text-white mb-3">
+                  {language === 'id' ? 'Rekam Jejak Profesional' : 'Professional Track Record'}
+                </h3>
+                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6">
+                  {language === 'id'
+                    ? 'Pengalaman pemagangan industri di BUMN dan instansi pemerintah, dipadukan dengan kepemimpinan aktif dalam organisasi kemahasiswaan statistika.'
+                    : 'Industrial internship experience across state-owned enterprises and government agencies, combined with active leadership in student organizations.'}
+                </p>
+
+                <div className="space-y-3 pt-4 border-t border-black/[0.04] dark:border-white/5">
+                  <div className="flex items-center gap-3 text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="w-6 h-6 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">1</span>
+                    <span>{language === 'id' ? 'PERUM PERURI (BUMN)' : 'PERUM PERURI (SOE)'}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="w-6 h-6 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">2</span>
+                    <span>{language === 'id' ? 'KPPN A1 Magelang' : 'KPPN A1 Magelang'}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="w-6 h-6 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">3</span>
+                    <span>{language === 'id' ? 'Himpunan & Divisi Riset' : 'Student Association & Research'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Timeline Cards */}
+            <div className="lg:col-span-8 bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2.5rem] border border-black/[0.04] dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300 relative overflow-hidden">
+              <ExperienceList title={t('workExperience')} experiences={workExperiences} />
+              <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent w-full my-12" />
+              <ExperienceList title={t('orgExperience')} experiences={orgExperiences} />
+            </div>
           </div>
         </Section>
 
-        <Section id="proyek" title={t('projectsTitle')} className="transition-colors duration-300">
-          <p className="text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl text-lg leading-relaxed">
-            {t('projectsDesc')}
-          </p>
-          <ProjectGallery projects={projects} />
-        </Section>
+        {/* Owns its own full-bleed cinematic <section id="proyek"> — GSAP pinning */}
+        <ProjectGallery projects={projects} title={t('projectsTitle')} description={t('projectsDesc')} />
 
-
-        <Section id="publikasi" title={t('publicationsTitle')} className="transition-colors duration-300">
+        <Section 
+          id="publikasi" 
+          title={t('publicationsTitle')} 
+          containerClassName="max-w-6xl" 
+          className="transition-colors duration-300"
+        >
           <p className="text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl text-lg leading-relaxed">
             {t('publicationsDesc')}
           </p>
           <PublicationList publications={publications} />
         </Section>
-        <Section id="keterampilan" title={t('skillsTitle')} className="transition-colors duration-300">
+
+        <Section 
+          id="keterampilan" 
+          title={t('skillsTitle')} 
+          containerClassName="max-w-6xl" 
+          className="transition-colors duration-300"
+        >
           <SkillsCertifications certifications={certifications} skillCategories={skillCategories} />
         </Section>
         </React.Suspense>

@@ -1,177 +1,382 @@
-import { useState } from 'react';
-import { ExternalLink, Github, Code, ArrowRight, Eye } from 'lucide-react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ExternalLink, Github, Code, ArrowRight, Eye, MoveRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Project } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { ProjectDetailModal } from './ProjectDetailModal';
+import { RevealText } from './RevealText';
+import { EASE_OUT_EXPO } from '../lib/smoothScroll';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectGalleryProps {
   projects: Project[];
+  title: string;
+  description: string;
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
+/** Pinned horizontal scroll only on large screens with motion allowed. */
+const PIN_QUERY = '(min-width: 1024px) and (prefers-reduced-motion: no-preference)';
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = () => setMatches(mql.matches);
+    onChange();
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+}
+
+let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+const queueRefresh = () => {
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.7,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  },
-};
-
-export function ProjectGallery({ projects }: ProjectGalleryProps) {
+export function ProjectGallery({ projects, title, description }: ProjectGalleryProps) {
   const { t, language } = useLanguage();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const pinned = useMediaQuery(PIN_QUERY);
 
-  if (projects.length === 0) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+
+  const total = projects.length;
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  // --- Horizontal pinned scroll (GSAP ScrollTrigger) ---
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!pinned || !section || !track || total === 0) return;
+
+    const ctx = gsap.context(() => {
+      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+      const tween = gsap.to(track, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress})`;
+            if (counterRef.current) {
+              const idx = Math.min(total, Math.max(1, Math.round(self.progress * (total - 1)) + 1));
+              counterRef.current.textContent = pad(idx);
+            }
+          },
+        },
+      });
+
+      // Cards rise / scale into place as they slide in from the right.
+      gsap.utils.toArray<HTMLElement>('[data-card-inner]').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { scale: 0.86, opacity: 0.35, rotate: 2 },
+          {
+            scale: 1,
+            opacity: 1,
+            rotate: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: el,
+              containerAnimation: tween,
+              start: 'left 100%',
+              end: 'left 55%',
+              scrub: true,
+            },
+          },
+        );
+      });
+
+      // Screenshot drifts against the scroll direction (depth parallax).
+      gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { xPercent: 7 },
+          {
+            xPercent: -7,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: el,
+              containerAnimation: tween,
+              start: 'left right',
+              end: 'right left',
+              scrub: true,
+            },
+          },
+        );
+      });
+    }, section);
+
+    queueRefresh();
+    return () => ctx.revert();
+  }, [pinned, total]);
+
+  if (total === 0) {
     return (
-      <div className="text-zinc-500 dark:text-zinc-400 italic py-10 text-center border-2 border-dashed border-zinc-200 dark:border-white/10 rounded-[2rem] transition-colors">
-        {t('noProjects')}
-      </div>
+      <section id="proyek" className="py-24">
+        <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Intro title={title} description={description} />
+          <div className="text-zinc-500 dark:text-zinc-400 italic py-10 text-center border-2 border-dashed border-zinc-200 dark:border-white/10 rounded-[2rem] transition-colors">
+            {t('noProjects')}
+          </div>
+        </div>
+      </section>
     );
   }
 
+  const scrollHint = language === 'id' ? 'Scroll untuk menjelajah' : 'Scroll to explore';
+  const swipeHint = language === 'id' ? 'Geser untuk melihat' : 'Swipe to browse';
+
   return (
     <>
-      <motion.div 
-        key={language}
-        className="grid gap-10 lg:grid-cols-2"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
+      <section
+        ref={sectionRef}
+        id="proyek"
+        className={
+          pinned
+            ? 'relative h-screen overflow-hidden flex items-center bg-[#09090b] text-white transition-colors duration-700 shadow-2xl'
+            : 'relative py-28 sm:py-36 bg-[#09090b] text-white transition-colors duration-700'
+        }
       >
-        {projects.map((project) => (
-          <motion.div 
-            key={project.id} 
-            variants={itemVariants}
-          >
-            <SpotlightCard className="group flex flex-col h-full hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-500 hover:shadow-xl dark:hover:shadow-2xl/10 rounded-[2rem]">
-            
-              {/* Gallery Image Area - Clickable to open modal */}
-              <div 
-                onClick={() => setSelectedProject(project)}
-                className="relative h-72 sm:h-80 w-full bg-zinc-100/80 dark:bg-zinc-800/60 overflow-hidden border-b border-black/[0.03] dark:border-white/[0.02] transition-colors cursor-pointer group/img flex items-center justify-center p-3 sm:p-4"
-              >
-                {project.images && project.images.length > 0 ? (
-                  <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
-                    <img 
-                      src={project.images[0]} 
-                      alt={`${project.title} screenshot`}
-                      loading="lazy"
-                      decoding="async"
-                      className="max-h-full max-w-full object-contain rounded-xl shadow-sm group-hover:scale-105 group-hover:-translate-y-1 group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                    />
-                    {/* Hover Overlay with Eye Icon */}
-                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-xl backdrop-blur-[2px]">
-                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 dark:bg-zinc-900/95 text-zinc-900 dark:text-white text-xs font-semibold shadow-lg transform translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
-                        <Eye className="w-4 h-4 text-red-500" />
-                        {language === 'id' ? 'Lihat Detail' : 'View Details'}
+        {/* Cinematic Atmospheric Deep Glow & Star Dust Grid */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-[160px]" />
+          <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-rose-600/8 rounded-full blur-[140px]" />
+          <div 
+            className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '32px 32px'
+            }}
+          />
+        </div>
+
+        {!pinned && (
+          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <Intro title={title} description={description} />
+            <p className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] font-semibold text-zinc-400 mb-6">
+              {swipeHint} <MoveRight className="w-4 h-4" />
+            </p>
+          </div>
+        )}
+
+        <div
+          ref={trackRef}
+          data-cursor={pinned ? "drag" : undefined}
+          className={
+            pinned
+              ? 'relative z-10 flex w-max items-center gap-10 pl-[max(2rem,calc((100vw_-_64rem)/2_+_2rem))] pr-[12vw] will-change-transform'
+              : 'relative z-10 flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 sm:px-6 pb-4 scroll-px-4'
+          }
+        >
+          {pinned && (
+            <div className="shrink-0 w-[34vw] max-w-[440px] pr-6">
+              <Intro title={title} description={description} />
+              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] font-semibold text-zinc-400">
+                <span>{scrollHint}</span>
+                <motion.span
+                  animate={{ x: [0, 8, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                  className="inline-flex"
+                >
+                  <MoveRight className="w-4 h-4 text-red-500" />
+                </motion.span>
+              </div>
+            </div>
+          )}
+
+          {projects.map((project, idx) => (
+            <article
+              key={project.id}
+              className={
+                pinned
+                  ? 'shrink-0 w-[min(48vw,640px)] h-[min(74vh,640px)]'
+                  : 'shrink-0 w-[85vw] sm:w-[60vw] snap-start'
+              }
+            >
+              <div data-card-inner className="h-full origin-bottom-left">
+                <SpotlightCard className="group flex flex-col h-full bg-zinc-900/90 border border-white/10 hover:border-red-500/40 transition-all duration-500 rounded-[2rem] shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
+                  <div className="flex flex-col h-full">
+                    {/* Image area */}
+                    <div
+                      data-cursor="view"
+                      onClick={() => setSelectedProject(project)}
+                      className={`relative w-full bg-zinc-950/70 overflow-hidden border-b border-white/5 cursor-pointer group/img flex items-center justify-center p-4 ${
+                        pinned ? 'flex-1 min-h-0' : 'h-56 sm:h-72'
+                      }`}
+                    >
+                      {/* Giant outlined index number */}
+                      <span className="text-outline absolute top-2 right-5 text-[5.5rem] sm:text-[7rem] leading-none font-display font-bold select-none pointer-events-none z-0">
+                        {pad(idx + 1)}
                       </span>
+
+                      {project.images && project.images.length > 0 ? (
+                        <div data-parallax className="relative z-[1] w-full h-full flex items-center justify-center">
+                          <img
+                            src={project.images[0]}
+                            alt={`${project.title} screenshot`}
+                            loading="lazy"
+                            decoding="async"
+                            onLoad={queueRefresh}
+                            className="max-h-full max-w-full object-contain rounded-xl shadow-sm group-hover:scale-105 group-hover:-translate-y-1 group-hover:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-xl backdrop-blur-[2px]">
+                            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 text-zinc-950 text-xs font-semibold shadow-lg translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
+                              <Eye className="w-4 h-4 text-red-500" />
+                              {language === 'id' ? 'Lihat Detail' : 'View Details'}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative z-[1] w-full h-full flex flex-col items-center justify-center text-zinc-500">
+                          <Code className="w-12 h-12 mb-3 opacity-50 text-zinc-600" />
+                          <span className="text-sm font-medium">{t('noPreview')}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content area */}
+                    <div className="p-6 sm:p-8 flex flex-col shrink-0">
+                      <h3
+                        onClick={() => setSelectedProject(project)}
+                        className="text-xl sm:text-2xl font-bold text-white mb-2 transition-colors cursor-pointer hover:text-red-400 line-clamp-1"
+                      >
+                        {project.title}
+                      </h3>
+                      <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                        {project.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        {project.tags?.slice(0, 5).map((tag) => (
+                          <span key={tag} className="px-3 py-1 text-xs font-semibold bg-zinc-800/90 text-zinc-300 border border-white/5 rounded-lg">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/5">
+                        <button
+                          onClick={() => setSelectedProject(project)}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-colors cursor-pointer mr-auto"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>{language === 'id' ? 'Detail' : 'Details'}</span>
+                        </button>
+
+                        {project.demoUrl && (
+                          <MagneticButton
+                            as="a"
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white text-zinc-950 text-xs font-medium rounded-xl hover:bg-zinc-200 transition-colors shadow-sm"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            <span>{t('demo')}</span>
+                          </MagneticButton>
+                        )}
+                        {project.driveUrl && (
+                          <MagneticButton
+                            as="a"
+                            href={project.driveUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-xs font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm"
+                          >
+                            <ArrowRight className="w-3.5 h-3.5" />
+                            <span>{t('drive')}</span>
+                          </MagneticButton>
+                        )}
+                        {project.repoUrl && (
+                          <MagneticButton
+                            as="a"
+                            href={project.repoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 text-zinc-200 border border-white/10 text-xs font-medium rounded-xl hover:bg-zinc-700 transition-colors shadow-sm"
+                          >
+                            <Github className="w-3.5 h-3.5" />
+                            <span>{t('repo')}</span>
+                          </MagneticButton>
+                        )}
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="w-full h-64 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 transition-colors">
-                    <Code className="w-12 h-12 mb-3 opacity-50 text-zinc-300 dark:text-zinc-600 transition-colors" />
-                    <span className="text-sm font-medium">{t('noPreview')}</span>
-                  </div>
-                )}
+                </SpotlightCard>
               </div>
+            </article>
+          ))}
+        </div>
 
-              {/* Content Area */}
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 
-                  onClick={() => setSelectedProject(project)}
-                  className="text-2xl font-bold text-zinc-900 dark:text-white mb-3 transition-colors cursor-pointer hover:text-red-600 dark:hover:text-red-400"
-                >
-                  {project.title}
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 flex-grow transition-colors line-clamp-3">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {project.tags && project.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 text-xs font-semibold bg-zinc-100/80 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg transition-colors">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 mt-auto pt-2 border-t border-zinc-100 dark:border-white/5">
-                  {/* Detail Trigger */}
-                  <button
-                    onClick={() => setSelectedProject(project)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl transition-colors cursor-pointer mr-auto"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>{language === 'id' ? 'Detail' : 'Details'}</span>
-                  </button>
-
-                  {project.demoUrl && (
-                    <MagneticButton 
-                      as="a"
-                      href={project.demoUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-medium rounded-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors shadow-sm"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      <span>{t('demo')}</span>
-                    </MagneticButton>
-                  )}
-                  {project.driveUrl && (
-                    <MagneticButton 
-                      as="a"
-                      href={project.driveUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-xs font-medium rounded-xl hover:bg-red-700 transition-colors shadow-sm"
-                    >
-                      <ArrowRight className="w-3.5 h-3.5" />
-                      <span>{t('drive')}</span>
-                    </MagneticButton>
-                  )}
-                  {project.repoUrl && (
-                    <MagneticButton 
-                      as="a"
-                      href={project.repoUrl} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-white/10 text-xs font-medium rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shadow-sm"
-                    >
-                      <Github className="w-3.5 h-3.5" />
-                      <span>{t('repo')}</span>
-                    </MagneticButton>
-                  )}
-                </div>
+        {/* HUD: counter + progress (pinned mode) */}
+        {pinned && (
+          <div className="absolute bottom-8 left-0 right-0 pointer-events-none z-20">
+            <div className="w-full max-w-5xl mx-auto px-8 flex items-center gap-6">
+              <span className="font-display text-sm font-semibold tabular-nums text-white">
+                <span ref={counterRef} className="text-white font-bold">01</span>
+                <span className="text-zinc-500"> / {pad(total)}</span>
+              </span>
+              <div className="relative flex-1 h-px bg-white/15 overflow-hidden">
+                <div
+                  ref={progressRef}
+                  className="absolute inset-0 origin-left bg-gradient-to-r from-red-500 to-rose-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                  style={{ transform: 'scaleX(0)' }}
+                />
               </div>
-            </SpotlightCard>
-          </motion.div>
-        ))}
-      </motion.div>
+            </div>
+          </div>
+        )}
+      </section>
 
-      {/* Project Detail Modal */}
       <ProjectDetailModal
         project={selectedProject}
         isOpen={Boolean(selectedProject)}
         onClose={() => setSelectedProject(null)}
       />
+    </>
+  );
+}
+
+function Intro({ title, description }: { title: string; description: string }) {
+  return (
+    <>
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-xs font-semibold text-red-400 mb-6 uppercase tracking-wider">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+        Featured Showcase
+      </div>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 1.2, ease: EASE_OUT_EXPO }}
+        className="h-px w-16 bg-red-500 origin-left mb-6"
+      />
+      <RevealText
+        as="h2"
+        text={title}
+        by="word"
+        stagger={0.08}
+        className="block text-4xl md:text-5xl font-display font-semibold tracking-tight text-white mb-6"
+      />
+      <p className="text-zinc-300 mb-10 max-w-2xl text-lg leading-relaxed">{description}</p>
     </>
   );
 }

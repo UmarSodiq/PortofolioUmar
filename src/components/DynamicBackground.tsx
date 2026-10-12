@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useMotionTemplate } from 'motion/react';
+import { motion, useMotionValue, useSpring, useMotionTemplate, useScroll, useTransform } from 'motion/react';
 
 export function DynamicBackground() {
   const mouseX = useMotionValue(-1000);
@@ -7,6 +7,12 @@ export function DynamicBackground() {
 
   const springX = useSpring(mouseX, { damping: 32, stiffness: 220 });
   const springY = useSpring(mouseY, { damping: 32, stiffness: 220 });
+
+  const { scrollYProgress } = useScroll();
+
+  // Gentle vertical drift linked with scroll progress
+  const blob1Y = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
+  const blob2Y = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -18,7 +24,7 @@ export function DynamicBackground() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
-  const torchBackground = useMotionTemplate`radial-gradient(750px circle at ${springX}px ${springY}px, rgba(239, 68, 68, 0.045), transparent 75%)`;
+  const torchBackground = useMotionTemplate`radial-gradient(750px circle at ${springX}px ${springY}px, rgba(239, 68, 68, 0.05), transparent 75%)`;
 
   return (
     <>
@@ -40,12 +46,12 @@ export function DynamicBackground() {
         }}
       />
 
-      {/* Floating Ambient Mesh Blobs */}
+      {/* Floating Ambient Mesh Blobs with Scroll-Responsive Parallax */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <motion.div
+          style={{ y: blob1Y }}
           animate={{
             x: [0, 80, 0, -80, 0],
-            y: [0, -80, 80, 40, 0],
             scale: [1, 1.08, 0.95, 1.08, 1],
           }}
           transition={{
@@ -53,12 +59,12 @@ export function DynamicBackground() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%] rounded-full bg-gradient-to-br from-red-500/12 to-rose-600/5 dark:from-red-500/8 dark:to-transparent blur-[140px]"
+          className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%] rounded-full bg-gradient-to-br from-red-500/12 to-rose-600/5 dark:from-red-500/10 dark:to-transparent blur-[140px]"
         />
         <motion.div
+          style={{ y: blob2Y }}
           animate={{
             x: [0, -120, 0, 80, 0],
-            y: [0, 80, -40, 80, 0],
             scale: [1, 1.15, 0.9, 1.1, 1],
           }}
           transition={{
@@ -66,10 +72,22 @@ export function DynamicBackground() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-[35%] -right-[10%] w-[50%] h-[65%] rounded-full bg-gradient-to-bl from-rose-500/8 to-blue-500/5 dark:from-red-600/5 dark:to-transparent blur-[140px]"
+          className="absolute top-[35%] -right-[10%] w-[50%] h-[65%] rounded-full bg-gradient-to-bl from-rose-500/8 to-blue-500/6 dark:from-red-600/6 dark:to-blue-600/5 blur-[140px]"
+        />
+        {/* Deep ambient glow layer near bottom/projects */}
+        <motion.div
+          animate={{
+            scale: [0.9, 1.1, 0.9],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-[-10%] left-[25%] w-[50%] h-[40%] rounded-full bg-gradient-to-t from-red-500/6 dark:from-red-500/5 to-transparent blur-[130px]"
         />
       </div>
     </>
   );
 }
-

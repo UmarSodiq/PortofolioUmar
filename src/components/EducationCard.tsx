@@ -16,8 +16,22 @@ export function EducationCard({ data }: { data?: Education }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
-      <SpotlightCard className="rounded-[2rem] p-8 sm:p-10 transition-all duration-500 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-white/20 hover:shadow-xl dark:hover:shadow-2xl/10">
-        <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-10 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
+      <SpotlightCard className="rounded-[2.5rem] p-8 sm:p-12 transition-all duration-500 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-white/20 hover:shadow-2xl dark:hover:shadow-2xl/20 border border-black/[0.06] dark:border-white/10">
+        {/* Background Image: UIN Sunan Kalijaga with 35-40% opacity & dynamic gradient overlay */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem] z-0">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-40 dark:opacity-35 scale-100 group-hover:scale-105 transition-transform duration-1000 ease-out"
+            style={{ 
+              backgroundImage: `url('/uin-suka.jpg')`,
+              filter: 'saturate(1.2) contrast(1.05)'
+            }}
+          />
+          {/* Soft directional gradient mask ensuring text is sharp while campus architecture is clearly visible */}
+          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/60 to-white/30 dark:from-zinc-950/95 dark:via-zinc-950/70 dark:to-zinc-950/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/85 via-white/50 to-transparent dark:from-zinc-950/90 dark:via-zinc-950/50 dark:to-transparent" />
+        </div>
+
+        <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-10 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-500 pointer-events-none z-10">
           <GraduationCap className="w-48 h-48 -mr-10 -mt-10 dark:text-zinc-50" />
         </div>
 
