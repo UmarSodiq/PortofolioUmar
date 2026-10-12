@@ -8,7 +8,6 @@ import { RevealText } from './RevealText';
 import { HeroName } from './HeroName';
 import { EASE_OUT_EXPO, INTRO_DELAY } from '../lib/smoothScroll';
 import HeroContourWaves from './HeroContourWaves';
-import { HeroTopology3D } from './HeroTopology3D';
 
 const D = INTRO_DELAY;
 
@@ -24,7 +23,6 @@ export function Hero({ profile }: { profile?: Profile }) {
 
   // --- Scroll-linked parallax ---
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
   const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
@@ -45,29 +43,6 @@ export function Hero({ profile }: { profile?: Profile }) {
     >
       {/* Topographic / Fourier Waveform Contour Lines — the single cursor-reactive layer */}
       <HeroContourWaves progress={scrollYProgress} />
-
-      {/* Static brand-tinted glows (scroll parallax only — no infinite blur animation) */}
-      <motion.div style={{ y: backgroundY }} aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-15%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-rose-200/40 dark:bg-rose-600/15 rounded-full blur-[100px]" />
-        <div className="absolute top-[25%] right-[-12%] w-[55vw] h-[55vw] max-w-[680px] max-h-[680px] bg-amber-100/50 dark:bg-red-700/15 rounded-full blur-[110px]" />
-      </motion.div>
- 
-      {/* 3D Mathematical Topology & Neural Manifold (Three.js) */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.3, delay: D + 0.35, ease: EASE_OUT_EXPO }}
-        className="absolute right-[-15%] sm:right-[-4%] lg:right-[1%] xl:right-[4%] 2xl:right-[8%] top-[10%] sm:top-[12%] lg:top-[13%] w-[270px] h-[270px] sm:w-[350px] sm:h-[350px] lg:w-[420px] lg:h-[420px] z-[6] opacity-35 sm:opacity-50 lg:opacity-90 pointer-events-none lg:pointer-events-auto flex flex-col items-center justify-center"
-      >
-        <div className="w-full h-full relative">
-          <HeroTopology3D progress={scrollYProgress} />
-        </div>
-        {/* Subtle mathematical topology indicator on desktop */}
-        <div className="hidden lg:flex items-center gap-2 mt-[-18px] px-3 py-1 rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200/80 dark:border-white/10 text-[10.5px] font-mono text-zinc-500 dark:text-zinc-400 select-none shadow-sm pointer-events-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-          <span>Torus Manifold • Drag to rotate</span>
-        </div>
-      </motion.div>
 
       {/* Rotating circular badge with magnetic cursor physics (desktop) */}
       <div className="hidden lg:flex absolute right-[8%] bottom-[14%] z-20 items-center justify-center">

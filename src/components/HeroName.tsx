@@ -22,10 +22,10 @@ export function HeroName({ text = 'Umar Sodiq', delay = 0 }: HeroNameProps) {
         transition={{ duration: 1.1, delay, ease: EASE_OUT_EXPO }}
         className="inline-flex items-baseline"
       >
-        <span className="shimmer-title font-display font-semibold tracking-tighter cursor-pointer">
+        <span className="text-zinc-900 dark:text-white font-display font-semibold tracking-tighter">
           {text}
         </span>
-        <span className="text-red-500 font-display ml-1 select-none">.</span>
+        <span className="text-red-500 font-display ml-0.5 select-none">.</span>
       </motion.span>
     </span>
   );
