@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { ExternalLink, Github, Code, ArrowRight, Eye, MoveRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { gsap } from 'gsap';
@@ -143,9 +143,18 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
 
   const scrollHint = language === 'id' ? 'Scroll untuk menjelajah' : 'Scroll to explore';
   const swipeHint = language === 'id' ? 'Geser untuk melihat' : 'Swipe to browse';
+  const detailLabel = (name: string) => (language === 'id' ? `Lihat detail proyek ${name}` : `View details for ${name}`);
+  const onCardKey = (e: KeyboardEvent, project: Project) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setSelectedProject(project);
+    }
+  };
 
   return (
     <>
+      {/* Light → dark fade into the cinematic section (invisible in dark mode) */}
+      <div aria-hidden="true" className="h-40 -mt-24 bg-gradient-to-b from-transparent to-[#09090b] pointer-events-none dark:hidden" />
       <section
         ref={sectionRef}
         id="proyek"
@@ -217,8 +226,12 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
                     {/* Image area */}
                     <div
                       data-cursor="view"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={detailLabel(project.title)}
                       onClick={() => setSelectedProject(project)}
-                      className={`relative w-full bg-zinc-950/70 overflow-hidden border-b border-white/5 cursor-pointer group/img flex items-center justify-center p-4 ${
+                      onKeyDown={(e) => onCardKey(e, project)}
+                      className={`relative w-full bg-zinc-950/70 overflow-hidden border-b border-white/5 cursor-pointer group/img flex items-center justify-center p-4 outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-inset ${
                         pinned ? 'flex-1 min-h-0' : 'h-56 sm:h-72'
                       }`}
                     >
@@ -254,11 +267,14 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
 
                     {/* Content area */}
                     <div className="p-6 sm:p-8 flex flex-col shrink-0">
-                      <h3
-                        onClick={() => setSelectedProject(project)}
-                        className="text-xl sm:text-2xl font-bold text-white mb-2 transition-colors cursor-pointer hover:text-red-400 line-clamp-1"
-                      >
-                        {project.title}
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 line-clamp-1">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedProject(project)}
+                          className="text-left transition-colors cursor-pointer hover:text-red-400 focus-visible:text-red-400 outline-none focus-visible:underline underline-offset-4"
+                        >
+                          {project.title}
+                        </button>
                       </h3>
                       <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
                         {project.description}
@@ -345,6 +361,8 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
           </div>
         )}
       </section>
+      {/* Dark → light fade back out of the cinematic section */}
+      <div aria-hidden="true" className="h-40 -mb-24 bg-gradient-to-b from-[#09090b] to-transparent pointer-events-none dark:hidden" />
 
       <ProjectDetailModal
         project={selectedProject}

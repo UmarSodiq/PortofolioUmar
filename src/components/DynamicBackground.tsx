@@ -1,92 +1,44 @@
-import { useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useMotionTemplate, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 
+/**
+ * Global ambient atmosphere: two brand-tinted glows drifting with scroll plus a
+ * fine film-grain texture. Intentionally NOT cursor-reactive — the hero's
+ * contour waves and the custom cursor already own pointer feedback.
+ */
 export function DynamicBackground() {
-  const mouseX = useMotionValue(-1000);
-  const mouseY = useMotionValue(-1000);
-
-  const springX = useSpring(mouseX, { damping: 32, stiffness: 220 });
-  const springY = useSpring(mouseY, { damping: 32, stiffness: 220 });
-
   const { scrollYProgress } = useScroll();
 
-  // Gentle vertical drift linked with scroll progress
+  // Gentle vertical drift linked with scroll progress (transform-only = cheap)
   const blob1Y = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
   const blob2Y = useTransform(scrollYProgress, [0, 1], ['0%', '-50%']);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  const torchBackground = useMotionTemplate`radial-gradient(750px circle at ${springX}px ${springY}px, rgba(239, 68, 68, 0.05), transparent 75%)`;
-
   return (
     <>
-      {/* Global Ambient Cursor Torch (Desktop atmospheric lighting) */}
-      <motion.div
-        aria-hidden="true"
-        className="fixed inset-0 pointer-events-none z-10 hidden sm:block"
-        style={{
-          background: torchBackground,
-        }}
-      />
-
-      {/* Subtle Fine-art Matte Film Grain (Awwwards/Stripe luxury texture) */}
-      <div 
+      {/* Subtle fine-art matte film grain (static texture) */}
+      <div
         aria-hidden="true"
         className="fixed inset-0 pointer-events-none z-30 opacity-[0.03] dark:opacity-[0.045] mix-blend-overlay"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* Floating Ambient Mesh Blobs with Scroll-Responsive Parallax */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <motion.div
-          style={{ y: blob1Y }}
-          animate={{
-            x: [0, 80, 0, -80, 0],
-            scale: [1, 1.08, 0.95, 1.08, 1],
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%] rounded-full bg-gradient-to-br from-red-500/12 to-rose-600/5 dark:from-red-500/10 dark:to-transparent blur-[140px]"
-        />
-        <motion.div
-          style={{ y: blob2Y }}
-          animate={{
-            x: [0, -120, 0, 80, 0],
-            scale: [1, 1.15, 0.9, 1.1, 1],
-          }}
-          transition={{
-            duration: 26,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-[35%] -right-[10%] w-[50%] h-[65%] rounded-full bg-gradient-to-bl from-rose-500/8 to-blue-500/6 dark:from-red-600/6 dark:to-blue-600/5 blur-[140px]"
-        />
-        {/* Deep ambient glow layer near bottom/projects */}
-        <motion.div
-          animate={{
-            scale: [0.9, 1.1, 0.9],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute bottom-[-10%] left-[25%] w-[50%] h-[40%] rounded-full bg-gradient-to-t from-red-500/6 dark:from-red-500/5 to-transparent blur-[130px]"
-        />
+      {/* Ambient brand glows — slow horizontal drift (transform only, no scale/opacity loops) */}
+      <div aria-hidden="true" className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <motion.div style={{ y: blob1Y }} className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]">
+          <motion.div
+            animate={{ x: [0, 60, 0, -60, 0] }}
+            transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-full h-full rounded-full bg-gradient-to-br from-red-500/10 to-rose-500/5 dark:from-red-500/10 dark:to-transparent blur-[140px] will-change-transform"
+          />
+        </motion.div>
+        <motion.div style={{ y: blob2Y }} className="absolute top-[35%] -right-[10%] w-[50%] h-[65%]">
+          <motion.div
+            animate={{ x: [0, -80, 0, 60, 0] }}
+            transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-full h-full rounded-full bg-gradient-to-bl from-rose-500/8 to-amber-400/6 dark:from-red-600/8 dark:to-amber-500/4 blur-[140px] will-change-transform"
+          />
+        </motion.div>
       </div>
     </>
   );

@@ -66,7 +66,11 @@ export default function HeroContourWaves({ progress }: HeroContourWavesProps) {
     let time = 0;
 
     const render = () => {
-      if (!ctx || width === 0 || height === 0) return;
+      if (!ctx) return;
+      if (width === 0 || height === 0) {
+        if (running) animId = requestAnimationFrame(render);
+        return;
+      }
 
       // Smooth mouse lerp
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
@@ -141,21 +145,49 @@ export default function HeroContourWaves({ progress }: HeroContourWavesProps) {
         ctx.stroke();
       }
 
-      if (!reduced) {
+      if (!reduced && running) {
         time += 0.018;
         animId = requestAnimationFrame(render);
       }
     };
 
+    // Only animate while the hero is on screen and the tab is visible.
+    let running = false;
+    let inView = true;
+    const start = () => {
+      if (running || reduced || !inView || document.hidden) return;
+      running = true;
+      animId = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(animId);
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) start();
+        else stop();
+      },
+      { threshold: 0 },
+    );
+    io.observe(canvas);
+
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener('visibilitychange', onVisibility);
+
     if (reduced) {
       time = 1.5;
       render();
     } else {
-      animId = requestAnimationFrame(render);
+      start();
     }
 
     return () => {
-      cancelAnimationFrame(animId);
+      stop();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
       ro.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerleave', onPointerLeave);

@@ -1,6 +1,6 @@
-import { Mail, Linkedin, MapPin, Download, ArrowDownRight } from 'lucide-react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate } from 'motion/react';
-import { useRef, useEffect } from 'react';
+import { Mail, Linkedin, MapPin, Download, ArrowDownRight, ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { useRef } from 'react';
 import { Profile } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { MagneticButton } from './MagneticButton';
@@ -29,30 +29,8 @@ export function Hero({ profile }: { profile?: Profile }) {
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const badgeRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
 
-  // --- Mouse-reactive spotlight & blob parallax ---
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const smx = useSpring(mx, { stiffness: 60, damping: 20 });
-  const smy = useSpring(my, { stiffness: 60, damping: 20 });
-  const blobX1 = useTransform(smx, [0, 1], [-40, 40]);
-  const blobY1 = useTransform(smy, [0, 1], [-30, 30]);
-  const blobX2 = useTransform(smx, [0, 1], [50, -50]);
-  const blobY2 = useTransform(smy, [0, 1], [40, -40]);
-  const spotX = useTransform(smx, (v) => `${v * 100}%`);
-  const spotY = useTransform(smy, (v) => `${v * 100}%`);
-  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${spotX} ${spotY}, rgba(239,68,68,0.10), transparent 60%)`;
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      mx.set((e.clientX - r.left) / r.width);
-      my.set((e.clientY - r.top) / r.height);
-    };
-    el.addEventListener('mousemove', onMove);
-    return () => el.removeEventListener('mousemove', onMove);
-  }, [mx, my]);
+  // Note: the contour-wave canvas is the hero's single cursor-reactive layer.
+  // Extra mouse spotlights / blob parallax were removed to reduce visual noise and GPU load.
 
   const contactItem = 'flex items-center gap-3 hover:text-zinc-900 dark:hover:text-white transition-colors group';
   const iconBox =
@@ -64,33 +42,13 @@ export function Hero({ profile }: { profile?: Profile }) {
       id="beranda"
       className="min-h-screen flex flex-col justify-center relative pt-24 sm:pt-28 bg-[#FAFAFA] dark:bg-zinc-950 transition-colors duration-300 overflow-hidden"
     >
-      {/* Mouse-following spotlight */}
-      <motion.div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: spotlight }} />
-
-      {/* Topographic / Fourier Waveform Contour Lines — 100% free of dots/particles */}
+      {/* Topographic / Fourier Waveform Contour Lines — the single cursor-reactive layer */}
       <HeroContourWaves progress={scrollYProgress} />
 
-      {/* Animated gradient blobs (scroll + mouse parallax) */}
-      <motion.div style={{ y: backgroundY }} className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div style={{ x: blobX1, y: blobY1 }} className="absolute top-[-10%] left-[-10%]">
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.6, 0.4] }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-blue-200/40 dark:bg-blue-600/20 rounded-full blur-[100px]"
-          />
-        </motion.div>
-        <motion.div style={{ x: blobX2, y: blobY2 }} className="absolute top-[20%] right-[-10%]">
-          <motion.div
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] bg-red-200/40 dark:bg-rose-600/20 rounded-full blur-[120px]"
-          />
-        </motion.div>
-        <motion.div
-          animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.6, 0.3], x: [0, 50, 0], y: [0, 100, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-[-20%] left-[20%] w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] bg-purple-200/30 dark:bg-purple-600/20 rounded-full blur-[120px]"
-        />
+      {/* Static brand-tinted glows (scroll parallax only — no infinite blur animation) */}
+      <motion.div style={{ y: backgroundY }} aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-15%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-rose-200/40 dark:bg-rose-600/15 rounded-full blur-[100px]" />
+        <div className="absolute top-[25%] right-[-12%] w-[55vw] h-[55vw] max-w-[680px] max-h-[680px] bg-amber-100/50 dark:bg-red-700/15 rounded-full blur-[110px]" />
       </motion.div>
 
       {/* Rotating circular badge with magnetic cursor physics (desktop) */}
@@ -205,24 +163,32 @@ export function Hero({ profile }: { profile?: Profile }) {
             </motion.div>
           </div>
 
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 w-full">
+          {/* CTA hierarchy: one primary, one secondary, one tertiary text link */}
+          <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4 sm:gap-6 w-full">
             <motion.div {...fadeUp(D + 1.05)} className="w-full sm:w-auto">
-              <MagneticButton as="a" href="#pengalaman" className="group relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 rounded-full text-base font-medium text-white dark:text-zinc-900 bg-zinc-900 dark:bg-white shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all w-full sm:w-auto">
+              <MagneticButton as="a" href="#proyek" className="group relative overflow-hidden inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-base font-semibold text-white dark:text-zinc-900 dark:hover:text-white bg-zinc-900 dark:bg-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_32px_-6px_rgba(239,68,68,0.45)] transition-[color,box-shadow] duration-300 w-full sm:w-auto">
                 <span className="absolute inset-0 bg-red-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full" />
-                <span className="relative">{t('viewExperience')}</span>
+                <span className="relative">{t('viewProjects')}</span>
+                <ArrowRight className="relative w-4 h-4 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-white" />
               </MagneticButton>
             </motion.div>
             <motion.div {...fadeUp(D + 1.12)} className="w-full sm:w-auto">
-              <MagneticButton as="a" href="#proyek" className="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-base font-medium text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-zinc-800 shadow-sm transition-all w-full sm:w-auto">
-                {t('viewProjects')}
+              <MagneticButton as="a" href="#pengalaman" className="inline-flex items-center justify-center px-7 py-4 rounded-full text-base font-medium text-zinc-900 dark:text-white bg-white/70 dark:bg-zinc-900/70 backdrop-blur border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/25 transition-colors w-full sm:w-auto">
+                {t('viewExperience')}
               </MagneticButton>
             </motion.div>
-            <motion.div {...fadeUp(D + 1.19)} className="w-full sm:w-auto">
-              <MagneticButton as="a" href="/assets/CV_Umar_Sodiq.pdf" target="_blank" download="CV_Umar_Sodiq.pdf" className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-base font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 shadow-sm transition-all w-full sm:w-auto">
-                <Download className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+            <motion.a
+              {...fadeUp(D + 1.19)}
+              href="/CV_Umar_Sodiq.pdf"
+              download="CV_Umar_Sodiq.pdf"
+              className="group inline-flex items-center justify-center sm:justify-start gap-2 py-2 text-sm font-semibold text-red-600 dark:text-red-400"
+            >
+              <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+              <span className="relative">
                 {t('downloadCV')}
-              </MagneticButton>
-            </motion.div>
+                <span className="absolute left-0 -bottom-0.5 h-px w-full bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+              </span>
+            </motion.a>
           </div>
         </motion.div>
       </div>

@@ -29,13 +29,31 @@ export function SmoothScroll() {
     gsap.ticker.lagSmoothing(0);
 
     const onClick = (e: MouseEvent) => {
+      // Let the browser handle modified / non-primary clicks (new tab, etc.).
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const anchor = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;
       if (!anchor) return;
       const href = anchor.getAttribute('href');
       if (!href) return;
+
+      if (href === '#') {
+        e.preventDefault();
+        scrollToTarget(0);
+        history.pushState(null, '', window.location.pathname + window.location.search);
+        return;
+      }
+
+      let target: Element | null = null;
+      try {
+        target = document.querySelector(href);
+      } catch {
+        return; // invalid selector — fall back to native behaviour
+      }
+      if (!target) return;
+
       e.preventDefault();
-      if (href === '#') scrollToTarget(0);
-      else scrollToTarget(href);
+      scrollToTarget(href);
+      if (window.location.hash !== href) history.pushState(null, '', href);
     };
     document.addEventListener('click', onClick);
 

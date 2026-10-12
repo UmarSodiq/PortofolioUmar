@@ -1,6 +1,12 @@
 import { motion, AnimatePresence, animate } from 'motion/react';
 import { useState, useEffect } from 'react';
-import { EASE_OUT_EXPO } from '../lib/smoothScroll';
+import {
+  EASE_OUT_EXPO,
+  SHOW_LOADER,
+  LOADER_SEEN_KEY,
+  LOADER_COUNT_DURATION,
+  LOADER_HOLD,
+} from '../lib/smoothScroll';
 
 /**
  * Intro sequence: name letters rise in, a 0→100 counter + progress line runs,
@@ -8,20 +14,27 @@ import { EASE_OUT_EXPO } from '../lib/smoothScroll';
  * to the hero's own entrance (see INTRO_DELAY).
  */
 export function PageLoader() {
-  const [isLoading, setIsLoading] = useState(true);
+  // Only the first visit in a session gets the full curtain intro.
+  const [isLoading, setIsLoading] = useState(SHOW_LOADER);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (!SHOW_LOADER) return;
     document.documentElement.style.overflow = 'hidden';
     const controls = animate(0, 100, {
-      duration: 1.4,
+      duration: LOADER_COUNT_DURATION,
       ease: [0.65, 0, 0.35, 1],
       onUpdate: (v) => setCount(Math.round(v)),
       onComplete: () => {
         setTimeout(() => {
           setIsLoading(false);
           document.documentElement.style.overflow = '';
-        }, 150);
+          try {
+            sessionStorage.setItem(LOADER_SEEN_KEY, '1');
+          } catch {
+            /* storage unavailable — loader will simply replay next time */
+          }
+        }, LOADER_HOLD * 1000);
       },
     });
     return () => {
@@ -68,7 +81,7 @@ export function PageLoader() {
                   initial={{ y: '110%' }}
                   animate={{ y: '0%' }}
                   exit={{ y: '-110%' }}
-                  transition={{ duration: 0.8, delay: 0.1 + i * 0.04, ease: EASE_OUT_EXPO }}
+                  transition={{ duration: 0.6, delay: 0.05 + i * 0.03, ease: EASE_OUT_EXPO }}
                   className="inline-block"
                 >
                   {ch === ' ' ? '\u00A0' : ch}
@@ -77,7 +90,7 @@ export function PageLoader() {
               <motion.span
                 initial={{ y: '110%' }}
                 animate={{ y: '0%' }}
-                transition={{ duration: 0.8, delay: 0.6, ease: EASE_OUT_EXPO }}
+                transition={{ duration: 0.6, delay: 0.4, ease: EASE_OUT_EXPO }}
                 className="inline-block text-red-500"
               >
                 .
