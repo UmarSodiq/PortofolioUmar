@@ -28,7 +28,7 @@ export function HeroTopology3D({ progress }: HeroTopology3DProps) {
     // Scene & Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 4.8;
+    camera.position.z = 5.1;
 
     // WebGL Renderer with low-power preference
     const renderer = new THREE.WebGLRenderer({
@@ -45,7 +45,7 @@ export function HeroTopology3D({ progress }: HeroTopology3DProps) {
 
     // Create Mathematical Manifold: Torus Knot Geometry
     // (p=2, q=3: classic trefoil mathematical knot)
-    const geometry = new THREE.TorusKnotGeometry(1.2, 0.38, 120, 24, 2, 3);
+    const geometry = new THREE.TorusKnotGeometry(1.15, 0.34, 120, 24, 2, 3);
 
     // 1. Delicate Wireframe Lattice Material
     const wireframeMaterial = new THREE.MeshBasicMaterial({
