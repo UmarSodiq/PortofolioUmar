@@ -223,7 +223,7 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
               <div data-card-inner className="h-full origin-bottom-left">
                 <SpotlightCard className="group flex flex-col h-full bg-zinc-900/90 border border-white/10 hover:border-red-500/40 transition-all duration-500 rounded-[2rem] shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
                   <div className="flex flex-col h-full">
-                    {/* Image area */}
+                    {/* Uniform Cinematic Image Area */}
                     <div
                       data-cursor="view"
                       role="button"
@@ -231,34 +231,47 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
                       aria-label={detailLabel(project.title)}
                       onClick={() => setSelectedProject(project)}
                       onKeyDown={(e) => onCardKey(e, project)}
-                      className={`relative w-full bg-zinc-950/70 overflow-hidden border-b border-white/5 cursor-pointer group/img flex items-center justify-center p-4 outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-inset ${
-                        pinned ? 'flex-1 min-h-0' : 'h-56 sm:h-72'
+                      className={`relative w-full bg-zinc-950 overflow-hidden border-b border-white/10 cursor-pointer group/img outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-inset shrink-0 ${
+                        pinned ? 'h-[52%]' : 'aspect-[16/10] sm:aspect-[16/9]'
                       }`}
                     >
-                      {/* Giant outlined index number */}
-                      <span className="text-outline absolute top-2 right-5 text-[5.5rem] sm:text-[7rem] leading-none font-display font-bold select-none pointer-events-none z-0">
+                      {/* Outlined index number */}
+                      <span className="text-outline absolute top-2 right-4 text-[4.5rem] sm:text-[6rem] leading-none font-display font-bold select-none pointer-events-none z-10 drop-shadow">
                         {pad(idx + 1)}
                       </span>
 
                       {project.images && project.images.length > 0 ? (
-                        <div data-parallax className="relative z-[1] w-full h-full flex items-center justify-center">
+                        <div data-parallax className="relative z-[1] w-full h-full overflow-hidden">
+                          {/* Ambient background blur for cinematic depth */}
+                          <div 
+                            aria-hidden="true" 
+                            className="absolute inset-0 bg-cover bg-center blur-2xl opacity-25 scale-125 pointer-events-none"
+                            style={{ backgroundImage: `url(${project.images[0]})` }}
+                          />
+
+                          {/* Uniform full-bleed image with consistent object-top framing */}
                           <img
                             src={project.images[0]}
                             alt={`${project.title} screenshot`}
                             loading="lazy"
                             decoding="async"
                             onLoad={queueRefresh}
-                            className="max-h-full max-w-full object-contain rounded-xl shadow-sm group-hover:scale-105 group-hover:-translate-y-1 group-hover:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                            className="relative z-[1] w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                           />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-xl backdrop-blur-[2px]">
-                            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 text-zinc-950 text-xs font-semibold shadow-lg translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
+
+                          {/* Subtle bottom vignette transitioning into the card content */}
+                          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-900/90 via-zinc-900/40 to-transparent pointer-events-none z-[2]" />
+
+                          {/* Hover action pill */}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px] z-[3]">
+                            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-zinc-950 text-xs font-semibold shadow-2xl translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300">
                               <Eye className="w-4 h-4 text-red-500" />
-                              {language === 'id' ? 'Lihat Detail' : 'View Details'}
+                              {language === 'id' ? 'Lihat Detail Proyek' : 'View Project Details'}
                             </span>
                           </div>
                         </div>
                       ) : (
-                        <div className="relative z-[1] w-full h-full flex flex-col items-center justify-center text-zinc-500">
+                        <div className="relative z-[1] w-full h-full flex flex-col items-center justify-center text-zinc-500 bg-zinc-950/80">
                           <Code className="w-12 h-12 mb-3 opacity-50 text-zinc-600" />
                           <span className="text-sm font-medium">{t('noPreview')}</span>
                         </div>
