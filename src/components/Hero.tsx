@@ -8,6 +8,7 @@ import { RevealText } from './RevealText';
 import { HeroName } from './HeroName';
 import { EASE_OUT_EXPO, INTRO_DELAY } from '../lib/smoothScroll';
 import HeroContourWaves from './HeroContourWaves';
+import { HeroTopology3D } from './HeroTopology3D';
 
 const D = INTRO_DELAY;
 
@@ -49,6 +50,23 @@ export function Hero({ profile }: { profile?: Profile }) {
       <motion.div style={{ y: backgroundY }} aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-15%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-rose-200/40 dark:bg-rose-600/15 rounded-full blur-[100px]" />
         <div className="absolute top-[25%] right-[-12%] w-[55vw] h-[55vw] max-w-[680px] max-h-[680px] bg-amber-100/50 dark:bg-red-700/15 rounded-full blur-[110px]" />
+      </motion.div>
+ 
+      {/* 3D Mathematical Topology & Neural Manifold (Three.js) */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.3, delay: D + 0.35, ease: EASE_OUT_EXPO }}
+        className="absolute right-[-15%] sm:right-[-6%] lg:right-[4%] xl:right-[8%] top-[12%] sm:top-[15%] lg:top-[16%] w-[290px] h-[290px] sm:w-[380px] sm:h-[380px] lg:w-[460px] lg:h-[460px] z-10 opacity-35 sm:opacity-50 lg:opacity-100 pointer-events-none lg:pointer-events-auto flex flex-col items-center justify-center"
+      >
+        <div className="w-full h-full relative">
+          <HeroTopology3D progress={scrollYProgress} />
+        </div>
+        {/* Subtle mathematical topology indicator on desktop */}
+        <div className="hidden lg:flex items-center gap-2 mt-[-22px] px-3 py-1 rounded-full bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200/80 dark:border-white/10 text-[11px] font-mono text-zinc-500 dark:text-zinc-400 select-none shadow-sm pointer-events-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+          <span>Torus Manifold • Drag to rotate</span>
+        </div>
       </motion.div>
 
       {/* Rotating circular badge with magnetic cursor physics (desktop) */}
