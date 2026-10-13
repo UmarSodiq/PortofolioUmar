@@ -318,7 +318,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       ],
       tags: ['React', 'Vite', 'Tailwind CSS', 'Firebase'],
       repoUrl: 'https://github.com/UmarSodiq/PortofolioUmar',
-      demoUrl: 'https://portofolio.umarsodiq.workers.dev/'
+      demoUrl: 'https://umarsodiq.my.id/'
     }
   ],
   en: [
@@ -362,7 +362,7 @@ export const dummyProjects: Record<'id' | 'en', Project[]> = {
       ],
       tags: ['React', 'Vite', 'Tailwind CSS', 'Firebase'],
       repoUrl: 'https://github.com/UmarSodiq/PortofolioUmar',
-      demoUrl: 'https://portofolio.umarsodiq.workers.dev/'
+      demoUrl: 'https://umarsodiq.my.id/'
     }
   ]
 };
