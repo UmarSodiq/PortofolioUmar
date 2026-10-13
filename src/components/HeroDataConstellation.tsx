@@ -68,8 +68,8 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas.parentElement || canvas);
 
-    // Initialize 28 data nodes
-    const nodeCount = 28;
+    // Initialize 36 data nodes for rich, cohesive constellation
+    const nodeCount = 36;
     const nodes: DataNode[] = [];
 
     const initNodes = () => {
@@ -80,14 +80,14 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
         const x = Math.random() * w;
         const y = Math.random() * h;
         const angle = Math.random() * Math.PI * 2;
-        const speed = 0.25 + Math.random() * 0.35;
+        const speed = 0.22 + Math.random() * 0.32;
         nodes.push({
           x,
           y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          radius: i % 7 === 0 ? 3.0 : 1.8,
-          isCentroid: i % 9 === 0,
+          radius: i % 6 === 0 ? 3.4 : 2.2,
+          isCentroid: i % 8 === 0,
           baseX: x,
           baseY: y,
         });
@@ -116,8 +116,8 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
     // Animation Loop with Auto-Pause
     let running = false;
     let isVisible = true;
-    const maxConnectionDistance = 140;
-    const mouseRadius = 160;
+    const maxConnectionDistance = 165;
+    const mouseRadius = 185;
 
     const render = () => {
       if (!running || !isVisible) return;
@@ -139,9 +139,9 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
 
       // Colors
       const edgeBase = isDark ? '255, 255, 255' : '24, 24, 27';
-      const nodeFill = isDark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(24, 24, 27, 0.35)';
-      const centroidFill = isDark ? 'rgba(248, 113, 113, 0.75)' : 'rgba(220, 38, 38, 0.65)';
-      const centroidHalo = isDark ? 'rgba(248, 113, 113, 0.15)' : 'rgba(220, 38, 38, 0.10)';
+      const nodeFill = isDark ? 'rgba(255, 255, 255, 0.70)' : 'rgba(24, 24, 27, 0.55)';
+      const centroidFill = isDark ? 'rgba(239, 68, 68, 0.95)' : 'rgba(220, 38, 38, 0.90)';
+      const centroidHalo = isDark ? 'rgba(239, 68, 68, 0.25)' : 'rgba(220, 38, 38, 0.18)';
 
       // 1. Update positions
       for (let i = 0; i < nodes.length; i++) {
@@ -172,7 +172,7 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
       }
 
       // 2. Draw connections (Pairwise Graph Edges)
-      ctx.lineWidth = 0.75;
+      ctx.lineWidth = 1.4;
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
         const ay = a.y - scrollOffsetY;
@@ -186,7 +186,7 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < maxConnectionDistance) {
-            const alpha = (1 - dist / maxConnectionDistance) * (isDark ? 0.14 : 0.10);
+            const alpha = (1 - dist / maxConnectionDistance) * (isDark ? 0.35 : 0.26);
             ctx.strokeStyle = `rgba(${edgeBase}, ${alpha.toFixed(3)})`;
             ctx.beginPath();
             ctx.moveTo(a.x, ay);
@@ -201,7 +201,7 @@ export function HeroDataConstellation({ progress }: HeroDataConstellationProps) 
           const dy = ay - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < mouseRadius) {
-            const alpha = (1 - dist / mouseRadius) * (isDark ? 0.22 : 0.16);
+            const alpha = (1 - dist / mouseRadius) * (isDark ? 0.48 : 0.38);
             ctx.strokeStyle = `rgba(${edgeBase}, ${alpha.toFixed(3)})`;
             ctx.beginPath();
             ctx.moveTo(a.x, ay);
