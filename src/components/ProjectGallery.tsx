@@ -153,23 +153,19 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
 
   return (
     <>
-      {/* Light → dark fade into the cinematic section (invisible in dark mode) */}
-      <div aria-hidden="true" className="h-40 -mt-24 bg-gradient-to-b from-transparent to-[#09090b] pointer-events-none dark:hidden" />
       <section
         ref={sectionRef}
         id="proyek"
         className={
           pinned
-            ? 'relative h-screen overflow-hidden flex items-center bg-[#09090b] text-white transition-colors duration-700 shadow-2xl'
-            : 'relative py-28 sm:py-36 bg-[#09090b] text-white transition-colors duration-700'
+            ? 'relative h-screen overflow-hidden flex items-center bg-[#09090b] text-white transition-colors duration-500 border-t border-b border-zinc-200/80 dark:border-white/[0.08] shadow-2xl'
+            : 'relative py-28 sm:py-36 bg-[#09090b] text-white transition-colors duration-500 border-t border-b border-zinc-200/80 dark:border-white/[0.08]'
         }
       >
-        {/* Cinematic Atmospheric Deep Glow & Star Dust Grid */}
+        {/* Subtle architectural star dust grid (no muddy blur blobs) */}
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-[160px]" />
-          <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-rose-600/8 rounded-full blur-[140px]" />
           <div 
-            className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            className="absolute inset-0 opacity-[0.035] pointer-events-none"
             style={{
               backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
               backgroundSize: '32px 32px'
@@ -389,17 +385,11 @@ export function ProjectGallery({ projects, title, description }: ProjectGalleryP
 function Intro({ title, description }: { title: string; description: string }) {
   return (
     <>
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-xs font-semibold text-red-400 mb-6 uppercase tracking-wider">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-        Featured Showcase
+      <div className="inline-flex items-center gap-2 mb-3 font-mono text-[11px] uppercase tracking-[0.24em] text-zinc-400 select-none">
+        <span className="text-red-500 font-semibold">//</span>
+        <span>03</span>
+        <span className="w-8 h-px bg-white/20 ml-1" />
       </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 1.2, ease: EASE_OUT_EXPO }}
-        className="h-px w-16 bg-red-500 origin-left mb-6"
-      />
       <RevealText
         as="h2"
         text={title}

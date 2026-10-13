@@ -7,7 +7,7 @@ import { MagneticButton } from './MagneticButton';
 import { RevealText } from './RevealText';
 import { HeroName } from './HeroName';
 import { EASE_OUT_EXPO, INTRO_DELAY } from '../lib/smoothScroll';
-import HeroContourWaves from './HeroContourWaves';
+import { HeroDataConstellation } from './HeroDataConstellation';
 
 const D = INTRO_DELAY;
 
@@ -41,8 +41,8 @@ export function Hero({ profile }: { profile?: Profile }) {
       id="beranda"
       className="min-h-screen flex flex-col justify-center relative pt-24 sm:pt-28 bg-[#FAFAFA] dark:bg-zinc-950 transition-colors duration-300 overflow-hidden"
     >
-      {/* Topographic / Fourier Waveform Contour Lines — the single cursor-reactive layer */}
-      <HeroContourWaves progress={scrollYProgress} />
+      {/* Kinetic Minimalist Data Constellation (Topological Graph / K-Means Clustering) */}
+      <HeroDataConstellation progress={scrollYProgress} />
 
       {/* Rotating circular badge with magnetic cursor physics (desktop) */}
       <div className="hidden lg:flex absolute right-[8%] bottom-[14%] z-20 items-center justify-center">

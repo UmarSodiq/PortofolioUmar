@@ -66,9 +66,10 @@ export default function Home() {
 
         <Section 
           id="pendidikan" 
+          index="01"
           title={t('educationTitle')} 
           containerClassName="max-w-5xl" 
-          className="transition-colors duration-300"
+          className="bg-white dark:bg-[#09090b]"
         >
           <EducationCard data={education} />
         </Section>
@@ -76,14 +77,15 @@ export default function Home() {
         {/* Split & Sticky Layout for Experience */}
         <Section 
           id="pengalaman" 
+          index="02"
           title={t('experienceTitle')} 
           containerClassName="max-w-6xl" 
-          className="transition-colors duration-300"
+          className="bg-[#F5F5F7] dark:bg-[#0e0e11]"
         >
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Sticky Sidebar Info (Left Column) */}
             <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-6">
-              <div className="p-6 sm:p-8 rounded-[2rem] bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-black/[0.04] dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-none">
+              <div className="p-6 sm:p-8 rounded-[2rem] bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-black/[0.04] dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-none">
                 <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-semibold mb-4 border border-red-500/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                   {language === 'id' ? 'Karier & Kepemimpinan' : 'Career & Leadership'}
@@ -117,7 +119,7 @@ export default function Home() {
             {/* Right Column: Timeline Cards */}
             <div className="lg:col-span-8 bg-white dark:bg-zinc-900 p-6 sm:p-10 rounded-[2.5rem] border border-black/[0.04] dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none transition-colors duration-300 relative overflow-hidden">
               <ExperienceList title={t('workExperience')} experiences={workExperiences} />
-              <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent w-full my-12" />
+              <div className="h-px bg-zinc-200 dark:bg-zinc-800 w-full my-12" />
               <ExperienceList title={t('orgExperience')} experiences={orgExperiences} />
             </div>
           </div>
@@ -128,9 +130,10 @@ export default function Home() {
 
         <Section 
           id="publikasi" 
+          index="04"
           title={t('publicationsTitle')} 
           containerClassName="max-w-6xl" 
-          className="transition-colors duration-300"
+          className="bg-[#F5F5F7] dark:bg-[#0e0e11]"
         >
           <p className="text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl text-lg leading-relaxed">
             {t('publicationsDesc')}
@@ -140,9 +143,10 @@ export default function Home() {
 
         <Section 
           id="keterampilan" 
+          index="05"
           title={t('skillsTitle')} 
           containerClassName="max-w-6xl" 
-          className="transition-colors duration-300"
+          className="bg-white dark:bg-[#09090b]"
         >
           <SkillsCertifications certifications={certifications} skillCategories={skillCategories} />
         </Section>
